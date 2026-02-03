@@ -1,2 +1,2 @@
 # Khoury Cybersecurity Resource Guide
-# By Felicity Keyzer-Pollard and Amanda Rodriques
+## By Felicity Keyzer-Pollard and Amanda Rodriques
