@@ -86,6 +86,8 @@ sphinxcontrib-jquery==4.1
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
+psycopg2-binary==2.9.9
+pydantic[email]==2.12.5
 SQLAlchemy==2.0.22
 sreddit==1.0.3
 starlette==0.50.0

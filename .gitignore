@@ -43,9 +43,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Frontend build output
-frontend/dist/
-frontend/build/
-frontend/.vite/
+src/frontend/dist/
+src/frontend/build/
+src/frontend/.vite/
 
 # IDE / Editor
 .vscode/
