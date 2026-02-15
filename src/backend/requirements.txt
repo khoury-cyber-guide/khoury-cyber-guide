@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/backend/requirements.txt
 alabaster==0.7.13
 annotated-doc==0.0.4
 annotated-types==0.7.0
@@ -109,3 +110,9 @@ Werkzeug==3.0.0
 wsproto==1.2.0
 xtermcolor==1.3
 zipp==3.16.1
+=======
+fastapi
+uvicorn
+pydantic
+python-dotenv
+>>>>>>> 50de7ffaa690e7350aa755881df74e15aab274d6:backend/requirements.txt
