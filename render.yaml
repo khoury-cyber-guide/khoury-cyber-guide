@@ -1,0 +1,24 @@
+services:
+  - type: web
+    plan: free
+    name: khoury-cyber-guide-api
+    runtime: python
+    repo: https://github.com/khoury-cyber-guide/khoury-cyber-guide
+    rootDir: src/backend
+    buildCommand: 'pip install -r requirements.txt'
+    startCommand: 'uvicorn app.main:app --host 0.0.0.0 --port $PORT'
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: khoury-cyber-guide-db
+          property: connectionString
+      - key: FRONTEND_URL
+        sync: false
+      - key: PYTHON_VERSION
+        value: '3.13'
+
+databases:
+  - name: khoury-cyber-guide-db
+    plan: free
+    databaseName: khoury_cyber_guide
+    postgresMajorVersion: '18'
