@@ -12,13 +12,15 @@ export interface TopicSummary {
   description: string
 }
 
+import type { CourseCategoryTag } from '@/types/course'
+
 export interface CourseSummaryInTopic {
   id: number
   course_program: string
   course_code: number
   title: string
   description: string
-  category_tag: string[]
+  category_tag: CourseCategoryTag[]
 }
 
 export interface ProfessorSummary {

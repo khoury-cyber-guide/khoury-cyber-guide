@@ -71,7 +71,7 @@ export function TopicDetailPage() {
 
       {/* Main content */}
       <div className="mt-8">
-        <Accordion type="multiple" defaultValue={['understanding', 'on-campus', 'off-campus']} className="flex flex-col gap-3">
+        <Accordion multiple defaultValue={['understanding', 'on-campus', 'off-campus']} className="flex flex-col gap-3">
 
           {/* Section 1: Understanding the Topic */}
           <AccordionItem value="understanding" className="rounded-md border border-white/10 bg-graphite px-5">
