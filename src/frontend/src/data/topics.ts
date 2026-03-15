@@ -173,6 +173,7 @@ export interface LearningPath {
   slug: string
   description: string
   topicSlugs: string[]
+  color: string
 }
 
 export const LEARNING_PATHS: LearningPath[] = [
@@ -181,35 +182,41 @@ export const LEARNING_PATHS: LearningPath[] = [
     slug: 'foundational',
     description: 'Topics that appear across nearly every area of the field and form the backbone of most security roles.',
     topicSlugs: ['network-security', 'cryptography', 'system-os-security', 'security-engineering', 'application-security'],
+    color: '#c8102e',
   },
   {
     label: 'Career-Focused',
     slug: 'career-focused',
     description: 'The skills most commonly requested in security job postings and internships.',
     topicSlugs: ['network-security', 'security-operations', 'cloud-security', 'incident-response-forensics', 'application-security'],
+    color: '#a4804a',
   },
   {
     label: 'Defensive / Blue Team',
     slug: 'blue-team',
     description: 'Tools and techniques defenders use to monitor systems and protect infrastructure.',
     topicSlugs: ['network-security', 'security-operations', 'threat-intelligence', 'incident-response-forensics', 'cloud-security'],
+    color: '#3b82f6',
   },
   {
     label: 'Offensive / Red Team',
     slug: 'red-team',
     description: 'How attackers discover and exploit weaknesses — for those interested in adversarial thinking.',
     topicSlugs: ['penetration-testing', 'social-engineering', 'application-security', 'system-os-security', 'network-security'],
+    color: '#f97316',
   },
   {
     label: 'Policy & Risk',
     slug: 'policy-risk',
     description: 'The strategic and governance side of cybersecurity — frameworks, compliance, and ethics.',
     topicSlugs: ['risk-assessment-frameworks', 'grc-data-privacy', 'ethics-of-cybersecurity', 'threat-intelligence'],
+    color: '#8b5cf6',
   },
   {
     label: 'Edge Case',
     slug: 'edge-case',
     description: 'Critical topics unlikely to appear in coursework — areas becoming increasingly important in modern security.',
     topicSlugs: ['ai-ml-security', 'iot-physical-security'],
+    color: '#10b981',
   },
 ]

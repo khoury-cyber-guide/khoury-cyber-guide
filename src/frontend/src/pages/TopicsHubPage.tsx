@@ -5,8 +5,10 @@ import { getTopics } from '@/api/topics'
 import { TopicCard } from '@/components/shared/TopicCard'
 import { PageWrapper } from '@/components/layout/PageWrapper'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CATEGORY_META, LEARNING_PATHS } from '@/data/topics'
+import { CATEGORY_META, LEARNING_PATHS, TOPICS } from '@/data/topics'
 import type { TopicCategory, TopicSummary } from '@/types/topic'
+
+const topicBySlug = Object.fromEntries(TOPICS.map((t) => [t.slug, t]))
 
 const CATEGORY_ORDER: TopicCategory[] = [
   'build_and_secure',
@@ -107,13 +109,31 @@ export function TopicsHubPage() {
           {LEARNING_PATHS.map((path) => (
             <div
               key={path.slug}
-              className="flex flex-col gap-2 rounded-md border border-white/10 bg-graphite p-5"
+              className="flex flex-col gap-3 rounded-md border p-5"
+              style={{ backgroundColor: path.color + '1a', borderColor: path.color + '40' }}
             >
               <div className="flex items-center gap-3">
-                <span className="h-2 w-2 shrink-0 rounded-full bg-copper" aria-hidden="true" />
+                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: path.color }} aria-hidden="true" />
                 <h3 className="font-semibold text-alabaster">{path.label}</h3>
               </div>
               <p className="text-sm leading-relaxed text-dim-grey">{path.description}</p>
+              <ul className="flex flex-col gap-1">
+                {path.topicSlugs.map((slug) => {
+                  const topic = topicBySlug[slug]
+                  if (!topic) return null
+                  return (
+                    <li key={slug} className="flex items-start gap-2">
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full" style={{ backgroundColor: path.color }} aria-hidden="true" />
+                      <Link
+                        to={`/topics/${topic.category}/${slug}`}
+                        className="text-xs text-alabaster/75 transition-colors hover:font-semibold hover:text-alabaster"
+                      >
+                        {topic.title}
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
             </div>
           ))}
         </div>
