@@ -7,6 +7,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
+import { useTheme } from '@/hooks/useTheme'
 
 const TOPICS_LINKS = [
   { label: 'Build & Secure', to: '/topics/build_and_secure' },
@@ -37,11 +38,29 @@ const itemCls =
 const footerLinkCls =
   'block rounded px-3 py-2 text-xs text-dim-grey transition-colors hover:bg-graphite hover:text-alabaster'
 
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+    </svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  )
+}
+
 export function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { theme, toggle } = useTheme()
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-background/95 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
@@ -57,84 +76,92 @@ export function Nav() {
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
-          <NavLink
-            to="/start"
-            className={({ isActive }) =>
-              `px-3 py-1.5 text-xs font-semibold tracking-widest transition-colors ${
-                isActive ? 'text-carmine' : 'text-alabaster hover:text-carmine'
-              }`
-            }
+        {/* Theme toggle + mobile hamburger */}
+        <div className="flex items-center gap-1">
+          <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
+            <NavLink
+              to="/start"
+              className={({ isActive }) =>
+                `px-3 py-1.5 text-xs font-semibold tracking-widest transition-colors ${
+                  isActive ? 'text-carmine' : 'text-alabaster hover:text-carmine'
+                }`
+              }
+            >
+              START HERE
+            </NavLink>
+
+            <NavigationMenu>
+              <NavigationMenuList>
+                {/* Topics */}
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className={triggerCls}>TOPICS</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="w-52 p-1">
+                      {TOPICS_LINKS.map((link) => (
+                        <li key={link.to}>
+                          <Link to={link.to} className={itemCls}>{link.label}</Link>
+                        </li>
+                      ))}
+                      <li className="my-1 border-t border-white/10" />
+                      <li>
+                        <Link to="/topics" className={footerLinkCls}>All Topics →</Link>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                {/* Courses */}
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className={triggerCls}>COURSES</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="w-52 p-1">
+                      {COURSES_LINKS.map((link) => (
+                        <li key={link.to}>
+                          <Link to={link.to} className={itemCls}>{link.label}</Link>
+                        </li>
+                      ))}
+                      <li className="my-1 border-t border-white/10" />
+                      <li>
+                        <Link to="/courses" className={footerLinkCls}>All Courses →</Link>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                {/* Khoury — placeholders */}
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className={triggerCls}>KHOURY</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="w-52 p-1">
+                      {KHOURY_PLACEHOLDERS.map((label) => (
+                        <li key={label}>
+                          <span className="block cursor-not-allowed rounded px-3 py-2 text-sm text-dim-grey/60 select-none">
+                            {label}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </nav>
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="flex h-9 w-9 items-center justify-center rounded text-dim-grey transition-colors hover:text-alabaster"
           >
-            START HERE
-          </NavLink>
+            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+          </button>
 
-          <NavigationMenu>
-            <NavigationMenuList>
-              {/* Topics */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className={triggerCls}>TOPICS</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="w-52 p-1">
-                    {TOPICS_LINKS.map((link) => (
-                      <li key={link.to}>
-                        <Link to={link.to} className={itemCls}>{link.label}</Link>
-                      </li>
-                    ))}
-                    <li className="my-1 border-t border-white/10" />
-                    <li>
-                      <Link to="/topics" className={footerLinkCls}>All Topics →</Link>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {/* Courses */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className={triggerCls}>COURSES</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="w-52 p-1">
-                    {COURSES_LINKS.map((link) => (
-                      <li key={link.to}>
-                        <Link to={link.to} className={itemCls}>{link.label}</Link>
-                      </li>
-                    ))}
-                    <li className="my-1 border-t border-white/10" />
-                    <li>
-                      <Link to="/courses" className={footerLinkCls}>All Courses →</Link>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {/* Khoury — placeholders */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className={triggerCls}>KHOURY</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="w-52 p-1">
-                    {KHOURY_PLACEHOLDERS.map((label) => (
-                      <li key={label}>
-                        <span className="block cursor-not-allowed rounded px-3 py-2 text-sm text-dim-grey/60 select-none">
-                          {label}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </nav>
-
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          className="flex h-9 w-9 items-center justify-center rounded text-alabaster transition-colors hover:text-carmine md:hidden"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
+          <button
+            type="button"
+            className="flex h-9 w-9 items-center justify-center rounded text-alabaster transition-colors hover:text-carmine md:hidden"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
           {menuOpen ? (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-5 w-5" aria-hidden="true">
               <path d="M18 6 6 18M6 6l12 12" />
@@ -144,13 +171,14 @@ export function Nav() {
               <path d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           )}
-        </button>
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
       {menuOpen && (
         <nav
-          className="border-t border-white/10 bg-black px-4 pb-6 pt-4 md:hidden"
+          className="border-t border-white/10 bg-background px-4 pb-6 pt-4 md:hidden"
           aria-label="Mobile navigation"
         >
           <div className="flex flex-col gap-1">

@@ -64,6 +64,33 @@
   --radius-xl: calc(var(--radius) * 1.4);
 }
 
+/* Light mode overrides */
+:root.light {
+  color-scheme: light;
+
+  /* shadcn vars */
+  --background: oklch(0.97 0 0);
+  --foreground: oklch(0.1 0 0);
+  --card: oklch(0.93 0 0);
+  --card-foreground: oklch(0.1 0 0);
+  --popover: oklch(0.96 0 0);
+  --popover-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.91 0 0);
+  --secondary-foreground: oklch(0.1 0 0);
+  --muted: oklch(0.91 0 0);
+  --muted-foreground: oklch(0.42 0 0);
+  --accent: oklch(0.91 0 0);
+  --accent-foreground: oklch(0.1 0 0);
+  --border: oklch(0 0 0 / 10%);
+  --input: oklch(0 0 0 / 8%);
+
+  /* NU custom tokens — remapped for light surfaces */
+  --color-graphite: #e2e2e2;
+  --color-dim-grey: #595959;
+  --color-alabaster: #1a1a1a;
+  --color-bone: #c4b49a;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

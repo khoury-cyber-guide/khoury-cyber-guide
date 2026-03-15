@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { ThemeProvider } from '@/hooks/useTheme'
 import { Nav } from '@/components/layout/Nav'
 import { TopicsHubPage } from '@/pages/TopicsHubPage'
 import { TopicCategoryPage } from '@/pages/TopicCategoryPage'
@@ -10,6 +11,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 
 export default function App() {
   return (
+    <ThemeProvider>
     <BrowserRouter>
       <div className="flex min-h-svh flex-col">
         <Nav />
@@ -25,5 +27,6 @@ export default function App() {
         </Routes>
       </div>
     </BrowserRouter>
+    </ThemeProvider>
   )
 }
