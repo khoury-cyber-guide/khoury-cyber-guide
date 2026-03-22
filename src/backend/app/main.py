@@ -3,14 +3,11 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-<<<<<<< HEAD:src/backend/app/main.py
 from app.database import Base, engine
 
 # Create all tables on startup
 Base.metadata.create_all(bind=engine)
-=======
 load_dotenv()
->>>>>>> 50de7ffaa690e7350aa755881df74e15aab274d6:backend/app/main.py
 
 app = FastAPI()
 
