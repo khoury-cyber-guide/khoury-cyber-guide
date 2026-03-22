@@ -7,7 +7,7 @@ Open your backend and frontend in two separate terminals.
 
 ### Backend
 ```bash
-cd backend
+cd src/backend
 python -m venv venv
 source venv/bin/activate        # windows = venv\Scripts\activate
 pip install -r requirements.txt
@@ -17,7 +17,7 @@ Runs on http://localhost:8000
 
 ### Frontend
 ```bash
-cd frontend
+cd src/frontend
 npm install
 npm run dev
 ```

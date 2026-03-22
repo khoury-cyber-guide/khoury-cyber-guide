@@ -1,23 +1,112 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-neu-red: #C8102E;
-  --color-neu-red-dark: #a00e25;
-  --color-neu-black: #1a1a1a;
-  --color-neu-gray: #3d3d3d;
-  --color-neu-gray-light: #6b6b6b;
-  --color-neu-bg: #f0f0f0;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --color-carmine: #c8102e;
+  --color-burgundy: #8a0e23;
+  --color-graphite: #2b2b2b;
+  --color-dim-grey: #6b6b6b;
+  --color-alabaster: #dbdbdb;
+  --color-bone: #e0d6c6;
+  --color-copper: #a4804a;
+}
+
+/* NU dark-first theme — overrides shadcn defaults */
+:root {
+  --background: oklch(0 0 0);
+  --foreground: oklch(0.88 0 0);
+  --card: oklch(0.17 0 0);
+  --card-foreground: oklch(0.88 0 0);
+  --popover: oklch(0.17 0 0);
+  --popover-foreground: oklch(0.88 0 0);
+  --primary: oklch(0.52 0.22 22.4);       /* carmine #c8102e */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.22 0 0);
+  --secondary-foreground: oklch(0.88 0 0);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.55 0 0);
+  --accent: oklch(0.22 0 0);
+  --accent-foreground: oklch(0.88 0 0);
+  --destructive: oklch(0.52 0.22 22.4);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.52 0.22 22.4);
+  --radius: 0.375rem;
+}
+
+@theme inline {
+  --font-sans: 'Geist Variable', system-ui, Helvetica, Arial, sans-serif;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* Light mode overrides */
+:root.light {
+  color-scheme: light;
+
+  /* shadcn vars */
+  --background: oklch(0.97 0 0);
+  --foreground: oklch(0.1 0 0);
+  --card: oklch(0.93 0 0);
+  --card-foreground: oklch(0.1 0 0);
+  --popover: oklch(0.96 0 0);
+  --popover-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.91 0 0);
+  --secondary-foreground: oklch(0.1 0 0);
+  --muted: oklch(0.91 0 0);
+  --muted-foreground: oklch(0.42 0 0);
+  --accent: oklch(0.91 0 0);
+  --accent-foreground: oklch(0.1 0 0);
+  --border: oklch(0 0 0 / 10%);
+  --input: oklch(0 0 0 / 8%);
+
+  /* NU custom tokens — remapped for light surfaces */
+  --color-graphite: #e2e2e2;
+  --color-dim-grey: #595959;
+  --color-alabaster: #1a1a1a;
+  --color-bone: #c4b49a;
 }
 
 @layer base {
   * {
-    box-sizing: border-box;
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
   body {
+    @apply bg-background text-foreground;
     margin: 0;
-    background-color: var(--color-neu-bg);
-    color: var(--color-neu-black);
-    font-family: var(--font-sans);
+    min-width: 320px;
+    min-height: 100svh;
   }
 }

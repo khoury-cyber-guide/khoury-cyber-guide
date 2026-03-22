@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, JSON, String, Table, Text, Boolean
+from sqlalchemy import Column, DateTime, ForeignKey, Index, Integer, JSON, String, Table, Text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -47,16 +47,26 @@ professor_courses = Table(
 #---------------------------------------------------------
 class Topic(Base):
     __tablename__ = "topics"
-    
+    __table_args__ = (Index("ix_topics_slug", "slug", unique=True),)
+
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(128), nullable=False)
+    # One of: build_and_secure | attack_and_defend | strategy_and_governance
+    category = Column(String(32), nullable=False, index=True)
+    # URL-friendly identifier, e.g. "network-security"
+    slug = Column(String(128), nullable=False)
+    # Display order within its category
+    order = Column(Integer, nullable=False, default=0, server_default="0")
     description = Column(Text, nullable=False, default="", server_default="")
     off_campus = Column(JSON, nullable=False, default=dict, server_default="{}")
 
     courses = relationship("Course", secondary=topic_courses, back_populates="topics")
     clubs = relationship("Club", secondary=topic_clubs, back_populates="topics")
     professors = relationship("Professor", secondary=topic_professors, back_populates="topics")
-    
+
+    # Optional rich content stored in misc:
+    # misc.why_care, misc.secondary_section, misc.still_confused,
+    # misc.active_research, misc.tools, misc.other_resources
     misc = Column(JSON, nullable=False, default=dict, server_default="{}")
     created_at = Column(DateTime(timezone=True), default=func.now(), server_default=func.now())
     

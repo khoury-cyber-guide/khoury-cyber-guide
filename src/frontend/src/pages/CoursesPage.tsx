@@ -1,0 +1,104 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { useApi } from '@/hooks/useApi'
+import { getCourses } from '@/api/courses'
+import { CourseCard } from '@/components/shared/CourseCard'
+import { PageWrapper } from '@/components/layout/PageWrapper'
+import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
+import { COURSE_CATEGORY_META } from '@/types/course'
+import type { CourseCategoryTag, CourseSummary } from '@/types/course'
+import { Link } from 'react-router-dom'
+
+const CATEGORY_ORDER: CourseCategoryTag[] = [
+  'CY Requirement',
+  'CS Requirement',
+  'Support',
+  'CY Elective',
+]
+
+export function CoursesPage() {
+  useDocumentTitle('Courses')
+  const { data: courses, loading, error } = useApi<CourseSummary[]>((signal) =>
+    getCourses(signal),
+  )
+
+  const grouped = CATEGORY_ORDER.reduce<Record<CourseCategoryTag, CourseSummary[]>>(
+    (acc, tag) => {
+      acc[tag] = (courses ?? [])
+        .filter((c) => c.category_tag.includes(tag))
+        .sort((a, b) => a.course_code - b.course_code)
+      return acc
+    },
+    {
+      'CY Requirement': [],
+      'CS Requirement': [],
+      Support: [],
+      'CY Elective': [],
+    },
+  )
+
+  return (
+    <PageWrapper>
+      <div className="mb-10">
+        <h1 className="text-3xl font-bold tracking-tight text-alabaster sm:text-4xl">Courses</h1>
+        <p className="mt-3 max-w-2xl text-base text-dim-grey">
+          All Khoury cybersecurity courses, grouped by degree requirement. Click any course for
+          full details including prerequisites, attributes, and past instructors.
+        </p>
+      </div>
+
+      {error && (
+        <div role="alert" className="mb-8 rounded-md border border-carmine/40 bg-carmine/10 px-4 py-3 text-sm text-carmine">
+          Failed to load courses. Please try refreshing.
+        </div>
+      )}
+
+      <div className="flex flex-col gap-10">
+        {CATEGORY_ORDER.map((tag, idx) => {
+          const meta = COURSE_CATEGORY_META[tag]
+          const catCourses = grouped[tag]
+
+          return (
+            <section key={tag} aria-labelledby={`cat-${tag}`}>
+              {idx > 0 && <Separator className="mb-10 bg-white/10" />}
+
+              <div className="mb-5 flex items-end justify-between gap-4">
+                <div className="border-l-4 border-carmine pl-4">
+                  <h2
+                    id={`cat-${tag}`}
+                    className="text-sm font-bold uppercase tracking-widest text-alabaster"
+                  >
+                    {meta.label}
+                  </h2>
+                  <p className="mt-1 text-sm text-dim-grey">{meta.description}</p>
+                </div>
+                <Link
+                  to={`/courses/group/${encodeURIComponent(tag)}`}
+                  className="shrink-0 text-xs font-medium text-carmine hover:underline"
+                >
+                  Browse all →
+                </Link>
+              </div>
+
+              {loading ? (
+                <div className="flex flex-col gap-2">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <Skeleton key={i} className="h-16 rounded-md bg-graphite/60" />
+                  ))}
+                </div>
+              ) : catCourses.length > 0 ? (
+                <div className="flex flex-col gap-2">
+                  {catCourses.map((course) => (
+                    <CourseCard key={course.id} course={course} />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-dim-grey">No courses in this category yet.</p>
+              )}
+            </section>
+          )
+        })}
+      </div>
+    </PageWrapper>
+  )
+}
