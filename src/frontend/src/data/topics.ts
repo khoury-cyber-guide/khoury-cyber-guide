@@ -2,25 +2,37 @@ import type { TopicCategory } from '@/types/topic'
 
 export const CATEGORY_META: Record<
   TopicCategory,
-  { label: string; tagline: string; description: string }
+  { label: string; tagline: string; description: string; hub_description: string[] }
 > = {
   build_and_secure: {
     label: 'Build & Secure',
     tagline: 'Design and harden systems from the ground up.',
     description:
       'These topics cover the technologies and practices used to design, implement, and maintain secure digital systems. Rather than reacting to attacks after they occur, this category emphasizes building security directly into networks, applications, operating systems, and modern infrastructure.',
+    hub_description: [
+      'The Build & Secure category focuses on the technologies and practices used to design, implement, and maintain secure digital systems. Rather than reacting to attacks after they occur, these topics emphasize building security directly into networks, applications, operating systems, and modern infrastructure. Understanding how systems are constructed and how they can be protected at each layer is essential for developing resilient technology.',
+      'By integrating security into system architecture, software development, and infrastructure design, organizations can reduce vulnerabilities before attackers have the opportunity to exploit them.'
+    ],
   },
   attack_and_defend: {
     label: 'Attack & Defend',
     tagline: 'Understand attacks. Learn to detect and respond.',
     description:
       'These topics explore the techniques attackers use to exploit systems as well as the tools and processes defenders rely on to identify threats, investigate incidents, and protect infrastructure. Understanding both sides is essential to security work.',
+    hub_description: [
+      'The Attack & Defend category focuses on understanding how cyber attacks occur and how organizations detect and respond to them. These topics explore the techniques attackers use to exploit systems as well as the tools and processes defenders rely on to identify threats, investigate incidents, and protect infrastructure.',
+      'Even well-designed systems can still be targeted by attackers. By understanding how attacks work and how security teams detect and respond to them, organizations can identify weaknesses, reduce the impact of incidents, and strengthen their overall defenses against evolving cyber threats.',
+    ],
   },
   strategy_and_governance: {
     label: 'Strategy & Governance',
     tagline: 'Manage risk. Shape policy. Guide decisions.',
     description:
       'These topics cover how organizations manage cybersecurity risk, develop policies, and guide security decisions at a strategic level — including frameworks, regulatory requirements, and the ethical considerations that shape security programs.',
+    hub_description: [
+      'The Strategy & Governance category focuses on how organizations manage cybersecurity risk, develop policies, and guide security decisions at a strategic level. These topics explore the frameworks, regulatory requirements, and ethical considerations that shape how security programs are designed and maintained.',
+      'Cybersecurity decisions often involve balancing technical risks, legal obligations, and organizational priorities. Effective governance and risk management help organizations protect sensitive data, comply with regulations, and build security programs that support long-term operational goals.',
+    ],
   },
 }
 

@@ -15,7 +15,7 @@ export function TopicCard({ topic }: TopicCardProps) {
         {topic.title}
       </h3>
       {topic.description && (
-        <p className="line-clamp-3 text-sm leading-relaxed text-dim-grey">
+        <p className="text-sm leading-relaxed text-dim-grey">
           {topic.description}
         </p>
       )}

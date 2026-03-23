@@ -2,11 +2,9 @@ import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useApi } from '@/hooks/useApi'
 import { getTopics } from '@/api/topics'
-import { TopicCard } from '@/components/shared/TopicCard'
 import { PageWrapper } from '@/components/layout/PageWrapper'
-import { Skeleton } from '@/components/ui/skeleton'
 import { CATEGORY_META, LEARNING_PATHS, TOPICS } from '@/data/topics'
-import type { TopicCategory, TopicSummary } from '@/types/topic'
+import type { TopicCategory } from '@/types/topic'
 
 const topicBySlug = Object.fromEntries(TOPICS.map((t) => [t.slug, t]))
 
@@ -18,19 +16,7 @@ const CATEGORY_ORDER: TopicCategory[] = [
 
 export function TopicsHubPage() {
   useDocumentTitle('Topics')
-  const { data: topics, loading, error } = useApi<TopicSummary[]>((signal) =>
-    getTopics(signal),
-  )
-
-  const grouped = CATEGORY_ORDER.reduce<Record<TopicCategory, TopicSummary[]>>(
-    (acc, cat) => {
-      acc[cat] = (topics ?? [])
-        .filter((t) => t.category === cat)
-        .sort((a, b) => a.order - b.order)
-      return acc
-    },
-    { build_and_secure: [], attack_and_defend: [], strategy_and_governance: [] },
-  )
+  const { error } = useApi((signal) => getTopics(signal))
 
   return (
     <PageWrapper>
@@ -55,14 +41,12 @@ export function TopicsHubPage() {
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         {CATEGORY_ORDER.map((cat) => {
           const meta = CATEGORY_META[cat]
-          const catTopics = grouped[cat]
-
           return (
             <section key={cat} aria-labelledby={`cat-${cat}`} className="flex flex-col gap-4">
               <div className="border-l-4 border-carmine pl-4">
                 <h2
                   id={`cat-${cat}`}
-                  className="text-sm font-bold uppercase tracking-widest text-alabaster"
+                  className="text-lg font-bold tracking-tight text-alabaster"
                 >
                   {meta.label}
                 </h2>
@@ -74,22 +58,12 @@ export function TopicsHubPage() {
                   View all →
                 </Link>
               </div>
+              <div className="flex flex-col gap-3">
+                {meta.hub_description.map((para, i) => (
+                  <p key={i} className="text-sm leading-relaxed text-dim-grey">{para}</p>
+                ))}
+              </div>
 
-              {loading ? (
-                <div className="flex flex-col gap-2">
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <Skeleton key={i} className="h-[72px] rounded-md bg-graphite/60" />
-                  ))}
-                </div>
-              ) : catTopics.length > 0 ? (
-                <div className="flex flex-col gap-2">
-                  {catTopics.map((topic) => (
-                    <TopicCard key={topic.id} topic={topic} />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-dim-grey">No topics yet.</p>
-              )}
             </section>
           )
         })}
