@@ -9,6 +9,7 @@ import { TopicDetailPage } from '@/pages/TopicDetailPage'
 import { CoursesPage } from '@/pages/CoursesPage'
 import { CourseGroupPage } from '@/pages/CourseGroupPage'
 import { CourseDetailPage } from '@/pages/CourseDetailPage'
+import { HomePage } from '@/pages/HomePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { CurateLoginPage } from '@/pages/curate/CurateLoginPage'
 import { CurateDashboardPage } from '@/pages/curate/CurateDashboardPage'
@@ -34,7 +35,7 @@ export default function App() {
                 <div className="flex min-h-svh flex-col">
                   <Nav />
                   <Routes>
-                    <Route path="/" element={<Navigate to="/topics" replace />} />
+                    <Route path="/" element={<HomePage />} />
                     <Route path="/topics" element={<TopicsHubPage />} />
                     <Route path="/topics/:category" element={<TopicCategoryPage />} />
                     <Route path="/topics/:category/:slug" element={<TopicDetailPage />} />
