@@ -1,12 +1,15 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from app.auth import verify_admin
 from app.database import Base, engine
-from app.routers import courses, topics
+from app.models import AdminUser
+from app.routers import clubs, courses, professors, topics
+from app.schemas import AdminVerifyResponse
 
 Base.metadata.create_all(bind=engine)
 load_dotenv()
@@ -43,6 +46,13 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 app.include_router(topics.router)
 app.include_router(courses.router)
+app.include_router(professors.router)
+app.include_router(clubs.router)
+
+
+@app.post("/api/admin/verify", response_model=AdminVerifyResponse)
+def admin_verify(user: AdminUser = Depends(verify_admin)):
+    return AdminVerifyResponse(name=user.name, email=user.email)
 
 
 @app.get("/")

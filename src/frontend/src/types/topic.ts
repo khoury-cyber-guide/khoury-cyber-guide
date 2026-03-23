@@ -39,20 +39,42 @@ export interface ClubSummary {
   tags: string[]
 }
 
+export interface ResourceItem {
+  name: string
+  url: string
+  description?: string
+}
+
 export interface OffCampus {
-  certifications: Record<string, string>
-  learning_tools: Record<string, string>
-  socials: Record<string, string>
+  certifications: ResourceItem[]
+  learning_tools: ResourceItem[]
+  blogs_newsletters: ResourceItem[]
+  tools: ResourceItem[]
 }
 
 export interface TopicMisc {
+  what_is?: string
+  common_attacks?: string
   why_care?: string
-  secondary_section?: string
-  still_confused?: string
-  active_research?: Record<string, string>
-  tools?: Record<string, string>
-  other_resources?: Record<string, string>
+  still_confused?: ResourceItem[]
+  active_research?: ResourceItem[]
+  other_resources?: ResourceItem[]
 }
+
+export interface TopicCreate {
+  title: string
+  category: TopicCategory
+  slug: string
+  order?: number
+  description?: string
+  off_campus?: Partial<OffCampus>
+  misc?: Record<string, unknown>
+  course_ids?: number[]
+  club_ids?: number[]
+  professor_ids?: number[]
+}
+
+export type TopicUpdate = Partial<TopicCreate>
 
 export interface TopicDetail extends TopicSummary {
   off_campus: OffCampus

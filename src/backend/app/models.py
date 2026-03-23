@@ -99,11 +99,16 @@ class Course(Base):
     )
     
     coreq = Column(Boolean, nullable=False, default=False, server_default="false")
+    prereq_text = Column(Text, nullable=False, default="", server_default="")
     attributes = Column(JSON, default=list, server_default="[]")
-    terms = Column(String(64), nullable=False, default="", server_default="")
+    terms = Column(JSON, nullable=False, default=list, server_default="[]")
     tutoring = Column(Text, nullable=False, default="", server_default="")
     category_tag = Column(JSON, default=list, server_default="[]")
-    
+    class_type = Column(String(16), nullable=False, default="", server_default="")
+    avg_section_count = Column(JSON, nullable=False, default=dict, server_default="{}")
+    avg_class_size = Column(JSON, nullable=False, default=dict, server_default="{}")
+    notes = Column(Text, nullable=False, default="", server_default="")
+
     misc = Column(JSON, nullable=False, default=dict, server_default="{}")
     created_at = Column(DateTime(timezone=True), default=func.now(), server_default=func.now())
     
@@ -189,12 +194,27 @@ class Club(Base):
     url = Column(Text, nullable=False, default="", server_default="")
     
     topics = relationship(
-        "Topic", 
+        "Topic",
         secondary=topic_clubs,
         back_populates="clubs"
     )
-    
+
     misc = Column(JSON, nullable=False, default=dict, server_default="{}")
+    created_at = Column(DateTime(timezone=True), default=func.now(), server_default=func.now())
+
+
+class AdminUser(Base):
+    __tablename__ = "admin_users"
+    __table_args__ = (
+        Index("ix_admin_users_email", "email", unique=True),
+        Index("ix_admin_users_token_hash", "token_hash", unique=True),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    email = Column(String(128), nullable=False)
+    token_hash = Column(String(64), nullable=False)
+    is_active = Column(Boolean, nullable=False, default=True, server_default="true")
     created_at = Column(DateTime(timezone=True), default=func.now(), server_default=func.now())
     
     

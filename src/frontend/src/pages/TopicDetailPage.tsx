@@ -1,17 +1,181 @@
+import { Fragment, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useApi } from '@/hooks/useApi'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { getTopicBySlug } from '@/api/topics'
 import { PageWrapper } from '@/components/layout/PageWrapper'
 import { ResourceSection } from '@/components/shared/ResourceSection'
-import { CourseCard } from '@/components/shared/CourseCard'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CATEGORY_META } from '@/data/topics'
-import type { TopicDetail } from '@/types/topic'
+import type { TopicDetail, ResourceItem, CourseSummaryInTopic, ClubSummary } from '@/types/topic'
 import { NotFoundPage } from './NotFoundPage'
 
 const VALID_CATEGORIES = new Set(['build_and_secure', 'attack_and_defend', 'strategy_and_governance'])
+const PREVIEW_COUNT = 4
+
+function RichText({ text }: { text: string }) {
+  const segments = text.split(/(\*\*[^*]+\*\*)/g)
+  return (
+    <p className="whitespace-pre-line text-sm leading-relaxed text-alabaster">
+      {segments.map((seg, i) =>
+        seg.startsWith('**') && seg.endsWith('**')
+          ? <strong key={i} className="font-semibold">{seg.slice(2, -2)}</strong>
+          : seg
+      )}
+    </p>
+  )
+}
+
+function GridBox<T,>({
+  title,
+  items,
+  renderItem,
+  emptyMessage = 'Nothing here yet.',
+}: {
+  title: string
+  items: T[]
+  renderItem: (item: T) => React.ReactNode
+  emptyMessage?: string
+}) {
+  const [expanded, setExpanded] = useState(false)
+  const visible = expanded ? items : items.slice(0, PREVIEW_COUNT)
+  return (
+    <div className="flex flex-col rounded-md border border-white/10 bg-graphite/40 p-4">
+      <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-dim-grey">{title}</h3>
+      {items.length === 0 ? (
+        <p className="text-sm text-dim-grey">{emptyMessage}</p>
+      ) : (
+        <>
+          <div className="flex flex-col gap-1.5">
+            {visible.map((item, i) => (
+              <Fragment key={i}>{renderItem(item)}</Fragment>
+            ))}
+          </div>
+          {items.length > PREVIEW_COUNT && (
+            <button
+              type="button"
+              onClick={() => setExpanded(!expanded)}
+              className="mt-3 self-start text-xs text-carmine hover:underline"
+            >
+              {expanded ? 'Show less' : `Read More (${items.length - PREVIEW_COUNT} more)`}
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
+function ResourceItemRow({ item }: { item: ResourceItem }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <div className="rounded px-2 py-1.5 transition-colors hover:bg-black/10">
+        <a
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-between gap-2 text-sm text-alabaster hover:text-carmine"
+        >
+          <span className="min-w-0 truncate">{item.name}</span>
+          <span className="shrink-0 text-dim-grey" aria-hidden="true">↗</span>
+        </a>
+        {item.description && (() => {
+          const limit = 100
+          const long = item.description.length > limit
+          return (
+            <p className="mt-0.5 text-xs text-dim-grey">
+              {long ? item.description.slice(0, limit).trimEnd() + '…' : item.description}
+              {long && (
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  className="ml-1 font-bold text-carmine hover:text-carmine/70"
+                >
+                  more
+                </button>
+              )}
+            </p>
+          )
+        })()}
+      </div>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-lg border border-white/10 bg-graphite p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="font-medium text-alabaster">{item.name}</p>
+            {item.description && (
+              <p className="mt-2 text-sm leading-relaxed text-dim-grey">{item.description}</p>
+            )}
+            <div className="mt-4 flex items-center justify-between">
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-sm text-carmine hover:underline"
+              >
+                Open link <span aria-hidden="true">↗</span>
+              </a>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="text-xs text-dim-grey hover:text-alabaster"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+function renderResourceItem(item: ResourceItem) {
+  return <ResourceItemRow item={item} />
+}
+
+function renderCourse(course: CourseSummaryInTopic) {
+  return (
+    <Link
+      to={`/courses/${course.id}`}
+      className="group flex items-center gap-2 rounded px-2 py-1.5 transition-colors hover:bg-black/10"
+    >
+      <span className="shrink-0 font-mono text-xs text-carmine">
+        {course.course_program} {course.course_code}
+      </span>
+      <span className="min-w-0 truncate text-sm text-alabaster group-hover:text-carmine">
+        {course.title}
+      </span>
+    </Link>
+  )
+}
+
+function renderClub(club: ClubSummary) {
+  return (
+    <a
+      href={club.url || undefined}
+      target={club.url ? '_blank' : undefined}
+      rel="noopener noreferrer"
+      className="group flex items-start gap-3 rounded px-2 py-1.5 transition-colors hover:bg-black/10"
+    >
+      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-carmine" aria-hidden="true" />
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-alabaster group-hover:text-carmine">{club.name}</p>
+        {club.mission && (
+          <p className="mt-0.5 line-clamp-2 text-xs text-dim-grey">{club.mission}</p>
+        )}
+      </div>
+    </a>
+  )
+}
 
 export function TopicDetailPage() {
   const { category, slug } = useParams<{ category: string; slug: string }>()
@@ -33,7 +197,7 @@ export function TopicDetailPage() {
         <Skeleton className="mb-3 h-4 w-48 bg-graphite/60" />
         <Skeleton className="mb-6 h-10 w-96 bg-graphite/60" />
         <div className="flex flex-col gap-3">
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-14 rounded-md bg-graphite/60" />
           ))}
         </div>
@@ -41,16 +205,14 @@ export function TopicDetailPage() {
     )
   }
 
-  if (error || !topic) {
-    return <NotFoundPage />
-  }
+  if (error || !topic) return <NotFoundPage />
 
+  const whatIs = topic.misc.what_is
+  const commonAttacks = topic.misc.common_attacks
   const whyCare = topic.misc.why_care
-  const secondary = topic.misc.secondary_section
-  const stillConfused = topic.misc.still_confused
-  const activeResearch = topic.misc.active_research ?? {}
-  const tools = topic.misc.tools ?? {}
-  const otherResources = topic.misc.other_resources ?? {}
+  const stillConfused = topic.misc.still_confused ?? []
+  const activeResearch = topic.misc.active_research ?? []
+  const otherResources = topic.misc.other_resources ?? []
 
   return (
     <PageWrapper>
@@ -69,158 +231,124 @@ export function TopicDetailPage() {
         {topic.title}
       </h1>
 
-      {/* Main content */}
-      <div className="mt-8">
-        <Accordion multiple defaultValue={['understanding', 'on-campus', 'off-campus']} className="flex flex-col gap-3">
+      <div className="mt-8 grid grid-cols-1 items-start gap-3 lg:grid-cols-3">
 
-          {/* Section 1: Understanding the Topic */}
-          <AccordionItem value="understanding" className="rounded-md border border-white/10 bg-graphite px-5">
-            <AccordionTrigger className="text-sm font-bold uppercase tracking-widest text-carmine hover:no-underline">
-              Understanding the Topic
-            </AccordionTrigger>
-            <AccordionContent className="flex flex-col gap-6 pb-6 pt-2">
+        <div className="rounded-md border border-white/10 px-5 py-5 lg:col-span-2">
+          <h2 className="mb-6 text-base font-bold uppercase tracking-widest text-carmine">
+            Understanding the Topic
+          </h2>
+          <div className="flex flex-col gap-6">
+            <div>
+              <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-dim-grey">
+                What is {topic.title}?
+              </h3>
+              <RichText text={whatIs || topic.description} />
+            </div>
+
+            {commonAttacks && (
               <div>
                 <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-dim-grey">
-                  What is {topic.title}?
+                  Common Attacks
                 </h3>
-                <p className="text-sm leading-relaxed text-alabaster">{topic.description}</p>
+                <RichText text={commonAttacks} />
               </div>
+            )}
 
-              {secondary && (
-                <div>
-                  <p className="text-sm leading-relaxed text-alabaster">{secondary}</p>
-                </div>
-              )}
-
-              {whyCare && (
-                <div>
-                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-dim-grey">
-                    Why should you care?
-                  </h3>
-                  <p className="text-sm leading-relaxed text-alabaster">{whyCare}</p>
-                </div>
-              )}
-
-              {stillConfused && (
-                <div>
-                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-dim-grey">
-                    Still confused?
-                  </h3>
-                  <p className="text-sm leading-relaxed text-alabaster">{stillConfused}</p>
-                </div>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* Section 2: On-Campus Resources */}
-          <AccordionItem value="on-campus" className="rounded-md border border-white/10 bg-graphite px-5">
-            <AccordionTrigger className="text-sm font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
-              On-Campus Resources
-            </AccordionTrigger>
-            <AccordionContent className="flex flex-col gap-6 pb-6 pt-2">
-              {/* Related Courses */}
+            {whyCare && (
               <div>
-                <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-dim-grey">
-                  Related Courses
+                <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-dim-grey">
+                  Why should you care?
                 </h3>
-                {topic.courses.length > 0 ? (
-                  <div className="flex flex-col gap-2">
-                    {topic.courses.map((course) => (
-                      <CourseCard key={course.id} course={course} compact />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-dim-grey">No courses linked yet.</p>
-                )}
+                <RichText text={whyCare} />
               </div>
+            )}
 
-              {/* Relevant Clubs */}
-              <div>
-                <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-dim-grey">
-                  Relevant Clubs
-                </h3>
-                {topic.clubs.length > 0 ? (
-                  <div className="flex flex-col gap-2">
-                    {topic.clubs.map((club) => (
-                      <a
-                        key={club.id}
-                        href={club.url || undefined}
-                        target={club.url ? '_blank' : undefined}
-                        rel="noopener noreferrer"
-                        className="group flex items-start gap-3 rounded px-3 py-2 transition-colors hover:bg-black/20"
-                      >
-                        <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-carmine" aria-hidden="true" />
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium text-alabaster group-hover:text-carmine">
-                            {club.name}
-                          </p>
-                          {club.mission && (
-                            <p className="mt-0.5 line-clamp-2 text-xs text-dim-grey">{club.mission}</p>
-                          )}
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-dim-grey">No clubs linked yet.</p>
-                )}
-              </div>
+            {stillConfused.length > 0 && (
+              <ResourceSection title="Still confused?" items={stillConfused} />
+            )}
+          </div>
+        </div>
 
-              {/* Active Research */}
-              {Object.keys(activeResearch).length > 0 && (
-                <ResourceSection title="Active Research" items={activeResearch} />
-              )}
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* Section 3: Off-Campus Resources */}
-          <AccordionItem value="off-campus" className="rounded-md border border-white/10 bg-graphite px-5">
-            <AccordionTrigger className="text-sm font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
-              Off-Campus Resources
-            </AccordionTrigger>
-            <AccordionContent className="flex flex-col gap-6 pb-6 pt-2">
-              <ResourceSection
-                title="Certifications"
-                items={topic.off_campus.certifications}
-                emptyMessage="No certifications listed yet."
-              />
-              <ResourceSection
-                title="Online Learning"
-                items={topic.off_campus.learning_tools}
-                emptyMessage="No learning tools listed yet."
-              />
-              <ResourceSection
-                title="Blogs & Communities"
-                items={topic.off_campus.socials}
-                emptyMessage="No community resources listed yet."
-              />
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* Section 4: Common Tools */}
-          {Object.keys(tools).length > 0 && (
-            <AccordionItem value="tools" className="rounded-md border border-white/10 bg-graphite px-5">
-              <AccordionTrigger className="text-sm font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
-                Common Tools & Software
+        <div className="flex flex-col gap-3">
+          <Accordion multiple defaultValue={['on-campus']}>
+            <AccordionItem value="on-campus" className="rounded-md border border-white/10 px-5">
+              <AccordionTrigger className="text-base font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
+                On-Campus Resources
               </AccordionTrigger>
               <AccordionContent className="pb-6 pt-2">
-                <ResourceSection title="Tools" items={tools} />
+                <div className="flex flex-col gap-4">
+                  <GridBox
+                    title="Related Courses"
+                    items={topic.courses}
+                    renderItem={renderCourse}
+                    emptyMessage="—"
+                  />
+                  <GridBox
+                    title="Relevant Clubs"
+                    items={topic.clubs}
+                    renderItem={renderClub}
+                    emptyMessage="—"
+                  />
+                  <GridBox
+                    title="Active Research"
+                    items={activeResearch}
+                    renderItem={renderResourceItem}
+                    emptyMessage="—"
+                  />
+                </div>
               </AccordionContent>
             </AccordionItem>
-          )}
+          </Accordion>
 
-          {/* Section 5: Other Resources */}
-          {Object.keys(otherResources).length > 0 && (
-            <AccordionItem value="other" className="rounded-md border border-white/10 bg-graphite px-5">
-              <AccordionTrigger className="text-sm font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
+          <Accordion multiple defaultValue={['off-campus']}>
+            <AccordionItem value="off-campus" className="rounded-md border border-white/10 px-5">
+              <AccordionTrigger className="text-base font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
+                Off-Campus Resources
+              </AccordionTrigger>
+              <AccordionContent className="pb-6 pt-2">
+                <div className="flex flex-col gap-4">
+                  <GridBox
+                    title="Certifications"
+                    items={topic.off_campus.certifications}
+                    renderItem={renderResourceItem}
+                    emptyMessage="—"
+                  />
+                  <GridBox
+                    title="Online Learning Tools"
+                    items={topic.off_campus.learning_tools}
+                    renderItem={renderResourceItem}
+                    emptyMessage="—"
+                  />
+                  <GridBox
+                    title="Blogs / Newsletters / Discords"
+                    items={topic.off_campus.blogs_newsletters}
+                    renderItem={renderResourceItem}
+                    emptyMessage="—"
+                  />
+                  <GridBox
+                    title="Common Tools & Software"
+                    items={topic.off_campus.tools}
+                    renderItem={renderResourceItem}
+                    emptyMessage="—"
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+
+        {otherResources.length > 0 && (
+          <Accordion multiple defaultValue={['other']} className="lg:col-span-3">
+            <AccordionItem value="other" className="rounded-md border border-white/10 px-5">
+              <AccordionTrigger className="text-base font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
                 Other Resources
               </AccordionTrigger>
               <AccordionContent className="pb-6 pt-2">
                 <ResourceSection title="Resources" items={otherResources} />
               </AccordionContent>
             </AccordionItem>
-          )}
-        </Accordion>
+          </Accordion>
+        )}
       </div>
     </PageWrapper>
   )

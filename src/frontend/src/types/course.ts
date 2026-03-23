@@ -25,15 +25,39 @@ export interface CourseDetail extends CourseSummary {
   extended_description: string
   url: string
   coreq: boolean
+  prereq_text: string
   attributes: string[]
-  terms: string
+  terms: string[]
   tutoring: string
+  class_type: string
+  avg_section_count: { summer?: number; fall_spring?: number }
+  avg_class_size: { summer?: number; fall_spring?: number }
+  notes: string
   topics: { id: number; title: string; slug: string; category: string }[]
   prereqs: CourseSummary[]
   past_professors: ProfessorSummary[]
   misc: Record<string, unknown>
   created_at: string
 }
+
+export interface CourseCreate {
+  course_program: string
+  course_code: number
+  title: string
+  description?: string
+  extended_description?: string
+  url?: string
+  coreq?: boolean
+  attributes?: string[]
+  terms?: string[]
+  tutoring?: string
+  category_tag?: CourseCategoryTag[]
+  misc?: Record<string, unknown>
+  prereq_ids?: number[]
+  professor_ids?: number[]
+}
+
+export type CourseUpdate = Partial<CourseCreate>
 
 export const COURSE_CATEGORY_META: Record<CourseCategoryTag, { label: string; description: string }> = {
   'CY Requirement': {

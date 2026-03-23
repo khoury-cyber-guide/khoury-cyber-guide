@@ -18,6 +18,9 @@ class CourseProgram(StrEnum):
     CY = "CY"
     CS = "CS"
     DS = "DS"
+    EECE = "EECE"
+    MATH = "MATH"
+    ENGW = "ENGW"
 
 class CourseAttribute(StrEnum):
     Ethical_Reasoning = "Ethical Reasoning"
@@ -35,6 +38,11 @@ class CourseCategoryTag(StrEnum):
     CS_REQ = "CS Requirement"
     CY_ELECT = "CY Elective"
     CY_REQ = "CY Requirement"
+
+class ClassType(StrEnum):
+    ONLINE = "ONLINE"
+    IN_PERSON = "IN-PERSON"
+    BOTH = "BOTH"
 
 class Tags(StrEnum):
     UGRAD = "Undergraduate"
@@ -57,10 +65,16 @@ class Tags(StrEnum):
 #---------------------------------------------------------
 # Shared
 #---------------------------------------------------------
+class ResourceItem(BaseModel):
+    name: str
+    url: HttpUrl
+    description: str = ""
+
 class OffCampus(BaseModel):
-    certifications: dict[str, HttpUrl] = {}
-    learning_tools: dict[str, HttpUrl] = {}
-    socials: dict[str, HttpUrl] = {}
+    certifications: list[ResourceItem] = []
+    learning_tools: list[ResourceItem] = []
+    blogs_newsletters: list[ResourceItem] = []
+    tools: list[ResourceItem] = []
 
 #---------------------------------------------------------
 # Summary Schemas
@@ -104,6 +118,13 @@ class ClubSummary(BaseModel):
     model_config = {"from_attributes": True}
 
 #---------------------------------------------------------
+# Admin
+#---------------------------------------------------------
+class AdminVerifyResponse(BaseModel):
+    name: str
+    email: str
+
+#---------------------------------------------------------
 # Topic Schemas
 #---------------------------------------------------------
 class TopicCreate(BaseModel):
@@ -114,6 +135,9 @@ class TopicCreate(BaseModel):
     description: str = ""
     off_campus: OffCampus = OffCampus()
     misc: dict = {}
+    course_ids: list[int] = []
+    club_ids: list[int] = []
+    professor_ids: list[int] = []
 
     @field_validator("slug")
     @classmethod
@@ -146,6 +170,9 @@ class TopicUpdate(BaseModel):
     description: str | None = None
     off_campus: OffCampus | None = None
     misc: dict | None = None
+    course_ids: list[int] | None = None
+    club_ids: list[int] | None = None
+    professor_ids: list[int] | None = None
 
     @field_validator("slug")
     @classmethod
@@ -165,11 +192,18 @@ class CourseCreate(BaseModel):
     extended_description: str = ""
     url: str = ""
     coreq: bool = False
+    prereq_text: str = ""
     attributes: list[CourseAttribute] = []
-    terms: str = ""
+    terms: list[str] = []
     tutoring: str = ""
     category_tag: list[CourseCategoryTag] = []
+    class_type: ClassType | None = None
+    avg_section_count: dict = {}
+    avg_class_size: dict = {}
+    notes: str = ""
     misc: dict = {}
+    prereq_ids: list[int] = []
+    professor_ids: list[int] = []
 
     @field_validator("course_code")
     @classmethod
@@ -187,10 +221,15 @@ class CourseRead(BaseModel):
     extended_description: str
     url: str
     coreq: bool
+    prereq_text: str
     attributes: list[str]
-    terms: str
+    terms: list[str]
     tutoring: str
     category_tag: list[str]
+    class_type: str
+    avg_section_count: dict
+    avg_class_size: dict
+    notes: str
     topics: list[TopicSummary] = []
     prereqs: list[CourseSummary] = []
     past_professors: list[ProfessorSummary] = []
@@ -207,11 +246,18 @@ class CourseUpdate(BaseModel):
     extended_description: str | None = None
     url: str | None = None
     coreq: bool | None = None
+    prereq_text: str | None = None
     attributes: list[CourseAttribute] | None = None
-    terms: str | None = None
+    terms: list[str] | None = None
     tutoring: str | None = None
     category_tag: list[CourseCategoryTag] | None = None
+    class_type: ClassType | None = None
+    avg_section_count: dict | None = None
+    avg_class_size: dict | None = None
+    notes: str | None = None
     misc: dict | None = None
+    prereq_ids: list[int] | None = None
+    professor_ids: list[int] | None = None
 
     @field_validator("course_code")
     @classmethod
@@ -230,6 +276,8 @@ class ProfessorCreate(BaseModel):
     photo: str = ""
     url: str = ""
     misc: dict = {}
+    course_ids: list[int] = []
+    topic_ids: list[int] = []
 
 class ProfessorRead(BaseModel):
     id: int
@@ -238,8 +286,8 @@ class ProfessorRead(BaseModel):
     area_of_focus: str
     photo: str
     url: str
-    course_ids: list[int] = []
-    topic_ids: list[int] = []
+    courses: list[CourseSummary] = []
+    topics: list[TopicSummary] = []
     misc: dict
     created_at: datetime
 
@@ -252,6 +300,8 @@ class ProfessorUpdate(BaseModel):
     photo: str | None = None
     url: str | None = None
     misc: dict | None = None
+    course_ids: list[int] | None = None
+    topic_ids: list[int] | None = None
 
 #---------------------------------------------------------
 # Degree Plan Schemas
@@ -365,6 +415,7 @@ class ClubCreate(BaseModel):
     tags: list[Tags] = []
     url: str = ""
     misc: dict = {}
+    topic_ids: list[int] = []
 
 class ClubRead(BaseModel):
     id: int
@@ -375,7 +426,7 @@ class ClubRead(BaseModel):
     email: str
     tags: list[str]
     url: str
-    topic_ids: list[int] = []
+    topics: list[TopicSummary] = []
     misc: dict
     created_at: datetime
 
@@ -390,3 +441,4 @@ class ClubUpdate(BaseModel):
     tags: list[Tags] | None = None
     url: str | None = None
     misc: dict | None = None
+    topic_ids: list[int] | None = None

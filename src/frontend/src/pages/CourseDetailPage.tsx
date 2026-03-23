@@ -81,33 +81,97 @@ export function CourseDetailPage() {
           <Separator className="bg-white/10" />
 
           {/* Prerequisites */}
-          {course.prereqs.length > 0 && (
+          {(course.prereqs.length > 0 || course.prereq_text) && (
             <section aria-labelledby="prereqs-heading">
               <h2 id="prereqs-heading" className="mb-3 text-xs font-semibold uppercase tracking-widest text-dim-grey">
                 Prerequisites
               </h2>
-              <div className="flex flex-wrap gap-2">
-                {course.prereqs.map((p) => (
-                  <Link key={p.id} to={`/courses/${p.id}`}>
-                    <Badge
-                      variant="outline"
-                      className="border-white/20 font-mono text-xs text-alabaster transition-colors hover:border-carmine/60 hover:text-carmine"
-                    >
-                      {p.course_program} {p.course_code}
-                    </Badge>
-                  </Link>
-                ))}
-              </div>
+              {course.prereq_text && (
+                <p className="mb-3 whitespace-pre-line text-sm leading-relaxed text-dim-grey">{course.prereq_text}</p>
+              )}
+              {course.prereqs.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {course.prereqs.map((p) => (
+                    <Link key={p.id} to={`/courses/${p.id}`}>
+                      <Badge
+                        variant="outline"
+                        className="border-white/20 font-mono text-xs text-alabaster transition-colors hover:border-carmine/60 hover:text-carmine"
+                      >
+                        {p.course_program} {p.course_code}
+                      </Badge>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </section>
+          )}
+
+        </div>
+
+        {/* Sidebar */}
+        <aside className="flex flex-col gap-6">
+          {/* Quick Info */}
+          {(course.terms.length > 0 || course.class_type || course.avg_section_count?.fall_spring != null || course.avg_class_size?.fall_spring != null) && (
+            <div className="rounded-md border border-white/10 bg-graphite p-5">
+              <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-dim-grey">
+                Quick Info
+              </h2>
+              <dl className="flex flex-col gap-5">
+                {course.terms.length > 0 && (
+                  <div>
+                    <dt className="text-xs text-dim-grey">Past Terms</dt>
+                    <dd className="mt-1.5 flex flex-wrap gap-1.5">
+                      {course.terms.map((t) => (
+                        <Badge key={t} variant="secondary" className="bg-white/5 text-xs text-alabaster">
+                          {t}
+                        </Badge>
+                      ))}
+                    </dd>
+                  </div>
+                )}
+                {course.class_type && (
+                  <div>
+                    <dt className="text-xs text-dim-grey">Class Type</dt>
+                    <dd className="mt-0.5 text-sm text-alabaster">{course.class_type}</dd>
+                  </div>
+                )}
+                {(course.avg_section_count?.summer != null || course.avg_section_count?.fall_spring != null) && (
+                  <div>
+                    <dt className="text-xs text-dim-grey">Avg. Section Count</dt>
+                    <dd className="mt-0.5 flex flex-col gap-1 text-sm text-alabaster">
+                      {course.avg_section_count?.fall_spring != null && (
+                        <span>Fall/Spring: <span className="font-medium">{course.avg_section_count.fall_spring}</span></span>
+                      )}
+                      {course.avg_section_count?.summer != null && (
+                        <span>Summer: <span className="font-medium">{course.avg_section_count.summer}</span></span>
+                      )}
+                    </dd>
+                  </div>
+                )}
+                {(course.avg_class_size?.summer != null || course.avg_class_size?.fall_spring != null) && (
+                  <div>
+                    <dt className="text-xs text-dim-grey">Avg. Class Size</dt>
+                    <dd className="mt-0.5 flex flex-col gap-1 text-sm text-alabaster">
+                      {course.avg_class_size?.fall_spring != null && (
+                        <span>Fall/Spring: <span className="font-medium">{course.avg_class_size.fall_spring}</span></span>
+                      )}
+                      {course.avg_class_size?.summer != null && (
+                        <span>Summer: <span className="font-medium">{course.avg_class_size.summer}</span></span>
+                      )}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </div>
           )}
 
           {/* Past Professors */}
           {course.past_professors.length > 0 && (
-            <section aria-labelledby="profs-heading">
-              <h2 id="profs-heading" className="mb-3 text-xs font-semibold uppercase tracking-widest text-dim-grey">
+            <div className="rounded-md border border-white/10 bg-graphite p-5">
+              <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-dim-grey">
                 Past Instructors
               </h2>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
                 {course.past_professors.map((prof) => (
                   <a
                     key={prof.id}
@@ -117,11 +181,7 @@ export function CourseDetailPage() {
                     className="flex items-center gap-3 rounded-md border border-white/10 bg-graphite p-3 transition-colors hover:border-carmine/40"
                   >
                     {prof.photo ? (
-                      <img
-                        src={prof.photo}
-                        alt=""
-                        className="h-9 w-9 rounded-full object-cover"
-                      />
+                      <img src={prof.photo} alt="" className="h-9 w-9 rounded-full object-cover" />
                     ) : (
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-carmine/20 text-xs font-semibold text-carmine">
                         {prof.full_name.charAt(0)}
@@ -136,39 +196,22 @@ export function CourseDetailPage() {
                   </a>
                 ))}
               </div>
-            </section>
+            </div>
           )}
-        </div>
 
-        {/* Sidebar */}
-        <aside className="flex flex-col gap-6">
-          {/* Attributes */}
+          {/* NUPath Attributes */}
           {course.attributes.length > 0 && (
             <div className="rounded-md border border-white/10 bg-graphite p-5">
               <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-dim-grey">
-                Attributes
+                NUPath Attributes
               </h2>
               <div className="flex flex-wrap gap-1.5">
                 {course.attributes.map((attr) => (
-                  <Badge
-                    key={attr}
-                    variant="secondary"
-                    className="bg-white/5 text-xs text-alabaster"
-                  >
+                  <Badge key={attr} variant="secondary" className="bg-white/5 text-xs text-alabaster">
                     {attr}
                   </Badge>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* Terms offered */}
-          {course.terms && (
-            <div className="rounded-md border border-white/10 bg-graphite p-5">
-              <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-dim-grey">
-                Terms Offered
-              </h2>
-              <p className="text-sm text-alabaster">{course.terms}</p>
             </div>
           )}
 
