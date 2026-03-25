@@ -62,22 +62,14 @@ export function CoursesPage() {
             <section key={tag} aria-labelledby={`cat-${tag}`}>
               {idx > 0 && <Separator className="mb-10 bg-white/10" />}
 
-              <div className="mb-5 flex items-end justify-between gap-4">
-                <div className="border-l-4 border-carmine pl-4">
-                  <h2
-                    id={`cat-${tag}`}
-                    className="text-sm font-bold uppercase tracking-widest text-alabaster"
-                  >
-                    {meta.label}
-                  </h2>
-                  <p className="mt-1 text-sm text-dim-grey">{meta.description}</p>
-                </div>
-                <Link
-                  to={`/courses/group/${encodeURIComponent(tag)}`}
-                  className="shrink-0 text-xs font-medium text-carmine hover:underline"
+              <div className="mb-5 border-l-4 border-carmine pl-4">
+                <h2
+                  id={`cat-${tag}`}
+                  className="text-sm font-bold uppercase tracking-widest text-alabaster"
                 >
-                  Browse all →
-                </Link>
+                  {meta.label}
+                </h2>
+                <p className="mt-1 text-sm text-dim-grey">{meta.description}</p>
               </div>
 
               {loading ? (

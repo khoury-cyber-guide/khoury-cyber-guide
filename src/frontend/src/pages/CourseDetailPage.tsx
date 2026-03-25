@@ -102,7 +102,7 @@ export function CourseDetailPage() {
                     <Link key={p.id} to={`/courses/${p.id}`}>
                       <Badge
                         variant="outline"
-                        className="cursor-pointer border-white/20 font-mono text-xs text-alabaster underline-offset-2 transition-colors hover:border-carmine/60 hover:text-carmine hover:underline"
+                        className="cursor-pointer border-dim-grey/50 font-mono text-xs text-alabaster underline-offset-2 transition-colors hover:border-carmine/60 hover:text-carmine hover:underline"
                       >
                         {p.course_program} {p.course_code}
                       </Badge>
@@ -129,7 +129,7 @@ export function CourseDetailPage() {
                     <dt className="text-xs text-dim-grey">Past Terms</dt>
                     <dd className="mt-1.5 flex flex-wrap gap-1.5">
                       {course.terms.map((t) => (
-                        <Badge key={t} variant="secondary" className="bg-white/5 text-xs text-alabaster">
+                        <Badge key={t} variant="secondary" className="bg-dim-grey/15 text-xs text-alabaster">
                           {t}
                         </Badge>
                       ))}
@@ -214,7 +214,7 @@ export function CourseDetailPage() {
               </h2>
               <div className="flex flex-wrap gap-1.5">
                 {course.attributes.map((attr) => (
-                  <Badge key={attr} variant="secondary" className="bg-white/5 text-xs text-alabaster">
+                  <Badge key={attr} variant="secondary" className="bg-dim-grey/15 text-xs text-alabaster">
                     {attr}
                   </Badge>
                 ))}
