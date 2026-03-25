@@ -1,10 +1,10 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useApi } from '@/hooks/useApi'
 import { getCourses } from '@/api/courses'
-import { CourseCard } from '@/components/shared/CourseCard'
 import { PageWrapper } from '@/components/layout/PageWrapper'
-import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Separator } from '@/components/ui/separator'
 import { COURSE_CATEGORY_META } from '@/types/course'
 import type { CourseCategoryTag, CourseSummary } from '@/types/course'
 import { Link } from 'react-router-dom'
@@ -81,16 +81,40 @@ export function CoursesPage() {
               </div>
 
               {loading ? (
-                <div className="flex flex-col gap-2">
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <Skeleton key={i} className="h-16 rounded-md bg-graphite/60" />
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <Skeleton key={i} className="h-36 rounded-md bg-graphite/60" />
                   ))}
                 </div>
               ) : catCourses.length > 0 ? (
-                <div className="flex flex-col gap-2">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {catCourses.slice(0, 5).map((course) => (
-                    <CourseCard key={course.id} course={course} />
+                    <Link
+                      key={course.id}
+                      to={`/courses/${course.id}`}
+                      className="group flex flex-col gap-2 rounded-md border border-white/10 bg-graphite p-4 transition-colors hover:border-carmine/40"
+                    >
+                      <Badge className="w-fit bg-carmine font-mono text-xs text-white">
+                        {course.course_program} {course.course_code}
+                      </Badge>
+                      <p className="font-medium text-alabaster transition-colors group-hover:text-carmine">
+                        {course.title}
+                      </p>
+                      {course.description && (
+                        <p className="line-clamp-2 text-xs leading-relaxed text-dim-grey">
+                          {course.description}
+                        </p>
+                      )}
+                    </Link>
                   ))}
+                  <Link
+                    to={`/courses/group/${encodeURIComponent(tag)}`}
+                    className="flex flex-col items-center justify-center gap-2 rounded-md border border-carmine/40 bg-carmine/5 p-4 text-center transition-colors hover:bg-carmine/10"
+                  >
+                    <span className="text-2xl text-carmine" aria-hidden="true">→</span>
+                    <span className="font-semibold text-carmine">Browse all</span>
+                    <span className="text-xs text-dim-grey">{catCourses.length} courses</span>
+                  </Link>
                 </div>
               ) : (
                 <p className="text-sm text-dim-grey">No courses in this category yet.</p>
