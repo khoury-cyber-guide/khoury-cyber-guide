@@ -10,6 +10,7 @@ import { CoursesPage } from '@/pages/CoursesPage'
 import { CourseGroupPage } from '@/pages/CourseGroupPage'
 import { CourseDetailPage } from '@/pages/CourseDetailPage'
 import { HomePage } from '@/pages/HomePage'
+import { StartHerePage } from '@/pages/StartHerePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { CurateLoginPage } from '@/pages/curate/CurateLoginPage'
 import { CurateDashboardPage } from '@/pages/curate/CurateDashboardPage'
@@ -36,6 +37,7 @@ export default function App() {
                   <Nav />
                   <Routes>
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/start" element={<StartHerePage />} />
                     <Route path="/topics" element={<TopicsHubPage />} />
                     <Route path="/topics/:category" element={<TopicCategoryPage />} />
                     <Route path="/topics/:category/:slug" element={<TopicDetailPage />} />
