@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useApi } from '@/hooks/useApi'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
@@ -14,9 +15,15 @@ export function CourseDetailPage() {
   const courseId = id ? parseInt(id, 10) : NaN
   const isValid = !isNaN(courseId)
 
-  const { data: course, loading, error } = useApi<CourseDetail | null>((signal) =>
+  const { data: course, loading, error, refetch } = useApi<CourseDetail | null>((signal) =>
     isValid ? getCourseById(signal, courseId) : Promise.resolve(null),
   )
+
+  const mounted = useRef(false)
+  useEffect(() => {
+    if (!mounted.current) { mounted.current = true; return }
+    refetch()
+  }, [courseId, refetch])
 
   useDocumentTitle(course ? `${course.course_program} ${course.course_code}: ${course.title}` : undefined)
 
@@ -60,7 +67,7 @@ export function CourseDetailPage() {
             </Badge>
           )}
         </div>
-        <h1 className="mt-3 text-3xl font-bold tracking-tight text-alabaster sm:text-4xl">
+        <h1 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight text-alabaster sm:text-4xl">
           {course.title}
         </h1>
       </div>
@@ -95,7 +102,7 @@ export function CourseDetailPage() {
                     <Link key={p.id} to={`/courses/${p.id}`}>
                       <Badge
                         variant="outline"
-                        className="border-white/20 font-mono text-xs text-alabaster transition-colors hover:border-carmine/60 hover:text-carmine"
+                        className="cursor-pointer border-white/20 font-mono text-xs text-alabaster underline-offset-2 transition-colors hover:border-carmine/60 hover:text-carmine hover:underline"
                       >
                         {p.course_program} {p.course_code}
                       </Badge>

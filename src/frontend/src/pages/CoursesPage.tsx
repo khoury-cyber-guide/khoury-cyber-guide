@@ -88,7 +88,7 @@ export function CoursesPage() {
                 </div>
               ) : catCourses.length > 0 ? (
                 <div className="flex flex-col gap-2">
-                  {catCourses.map((course) => (
+                  {catCourses.slice(0, 5).map((course) => (
                     <CourseCard key={course.id} course={course} />
                   ))}
                 </div>

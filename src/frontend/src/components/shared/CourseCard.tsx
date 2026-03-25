@@ -17,7 +17,7 @@ export function CourseCard({ course, compact = false }: CourseCardProps) {
     >
       <Badge
         variant="outline"
-        className="shrink-0 border-carmine/50 bg-carmine/10 font-mono text-xs text-carmine"
+        className="shrink-0 bg-carmine font-mono text-xs text-white"
       >
         {code}
       </Badge>
