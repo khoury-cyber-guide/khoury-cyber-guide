@@ -165,7 +165,7 @@ export function StartHerePage() {
 
       {/* Q2 */}
       {q1 && (
-        <div ref={q2Ref} className="border-t border-white/10 py-12">
+        <div ref={q2Ref} className="flex min-h-[calc(100svh-8rem)] flex-col justify-center border-t border-white/10 py-16">
           <h2 className="text-xl font-bold tracking-tight text-alabaster">What is your main goal right now?</h2>
           <p className="mt-2 text-sm text-dim-grey">Pick the option that fits best.</p>
           <QuizGrid options={Q2_OPTIONS} selected={q2} onSelect={handleQ2} />
@@ -174,7 +174,7 @@ export function StartHerePage() {
 
       {/* Q3 */}
       {q1 && q2 && (
-        <div ref={q3Ref} className="border-t border-white/10 py-12">
+        <div ref={q3Ref} className="flex min-h-[calc(100svh-8rem)] flex-col justify-center border-t border-white/10 py-16">
           <h2 className="text-xl font-bold tracking-tight text-alabaster">Which type of topics sounds most appealing?</h2>
           <p className="mt-2 text-sm text-dim-grey">Pick the one that stands out.</p>
           <QuizGrid options={Q3_OPTIONS} selected={q3} onSelect={handleQ3} />
@@ -183,7 +183,7 @@ export function StartHerePage() {
 
       {/* Result */}
       {q1 && q2 && q3 && resultPath && (
-        <div ref={resultRef} className="border-t border-white/10 py-12">
+        <div ref={resultRef} className="border-t border-white/10 py-16">
           <p className="mb-6 text-xs font-semibold uppercase tracking-widest text-dim-grey">
             Your recommendation
           </p>

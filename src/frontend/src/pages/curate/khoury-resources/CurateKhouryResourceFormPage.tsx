@@ -5,6 +5,7 @@ import { useAdminAuth } from '@/hooks/useAdminAuth'
 import { adminCreateKhouryResource, adminUpdateKhouryResource } from '@/api/admin'
 import { getKhouryResourceById } from '@/api/khouryResources'
 import { KHOURY_RESOURCE_CATEGORIES } from '@/data/khouryResources'
+import type { KhouryResourceCategory } from '@/types/khouryResource'
 
 const PRIORITIES = ['TOP_3', 'EXPAND', 'IF_SPACE']
 
@@ -121,7 +122,7 @@ export function CurateKhouryResourceFormPage() {
             <select
               id="category"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => setCategory(e.target.value as KhouryResourceCategory)}
               className={inputCls}
             >
               {KHOURY_RESOURCE_CATEGORIES.map((c) => (
