@@ -11,6 +11,7 @@ export interface CourseSummary {
   title: string
   description: string
   category_tag: CourseCategoryTag[]
+  is_featured: boolean
 }
 
 export interface ProfessorSummary {

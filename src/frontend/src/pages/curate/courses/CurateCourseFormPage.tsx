@@ -160,6 +160,7 @@ export function CurateCourseFormPage() {
   const [avgSizeSummer, setAvgSizeSummer] = useState('')
   const [avgSizeFallSpring, setAvgSizeFallSpring] = useState('')
   const [notes, setNotes] = useState('')
+  const [isFeatured, setIsFeatured] = useState(false)
   const [availableCourses, setAvailableCourses] = useState<CourseSummary[]>([])
   const [availableProfessors, setAvailableProfessors] = useState<ProfessorSummary[]>([])
 
@@ -203,6 +204,7 @@ export function CurateCourseFormPage() {
         setAvgSizeSummer(String(c.avg_class_size?.summer ?? ''))
         setAvgSizeFallSpring(String(c.avg_class_size?.fall_spring ?? ''))
         setNotes(c.notes ?? '')
+        setIsFeatured(c.is_featured ?? false)
       })
       .catch(() => setError('Failed to load course.'))
       .finally(() => setLoading(false))
@@ -237,6 +239,7 @@ export function CurateCourseFormPage() {
         fall_spring: avgSizeFallSpring !== '' ? Number(avgSizeFallSpring) : undefined,
       },
       notes,
+      is_featured: isFeatured,
       prereq_ids: prereqIds,
       professor_ids: professorIds,
     }
@@ -476,6 +479,15 @@ export function CurateCourseFormPage() {
             placeholder="Internal notes (not shown publicly)"
             className={inputCls}
           />
+          <label className="flex cursor-pointer items-center gap-3">
+            <input
+              type="checkbox"
+              checked={isFeatured}
+              onChange={(e) => setIsFeatured(e.target.checked)}
+              className="h-4 w-4 accent-carmine"
+            />
+            <span className="text-xs font-semibold text-dim-grey">Featured on Start Here</span>
+          </label>
         </div>
 
         {error && (

@@ -1,94 +1,104 @@
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useApi } from '@/hooks/useApi'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { PageWrapper } from '@/components/layout/PageWrapper'
+import { Skeleton } from '@/components/ui/skeleton'
 import { getKhouryResources } from '@/api/khouryResources'
 import { KHOURY_RESOURCE_CATEGORY_MAP } from '@/data/khouryResources'
+import { NotFoundPage } from './NotFoundPage'
 import type { KhouryResourceCategory, KhouryResourceSummary } from '@/types/khouryResource'
+
+const VALID_CATEGORIES = new Set<string>([
+  'general_university',
+  'advising_degree_planning',
+  'coop_career_planning',
+  'clubs_on_campus_events',
+  'scholarship_financial_aid',
+  'undergraduate_research',
+  'wellbeing_mental_health',
+])
 
 export function KhouryResourcesCategoryPage() {
   const { category } = useParams<{ category: string }>()
-  const meta = category ? KHOURY_RESOURCE_CATEGORY_MAP[category as KhouryResourceCategory] : null
+  const isValid = category != null && VALID_CATEGORIES.has(category)
+  const meta = isValid ? KHOURY_RESOURCE_CATEGORY_MAP[category as KhouryResourceCategory] : null
 
-  useDocumentTitle(meta ? `${meta.label} — Khoury Resources` : 'Khoury Resources')
-
-  const isValid = !!meta
+  useDocumentTitle(meta ? `${meta.label} — Khoury Resources` : undefined)
 
   const { data: resources, loading, error } = useApi<KhouryResourceSummary[]>(
-    (signal) => getKhouryResources(signal, { category: category as KhouryResourceCategory }),
+    (signal) =>
+      isValid
+        ? getKhouryResources(signal, { category: category as KhouryResourceCategory })
+        : Promise.resolve([]),
   )
 
-  if (!isValid) {
-    return (
-      <PageWrapper>
-        <div className="py-16 text-center">
-          <p className="text-sm text-dim-grey">Category not found.</p>
-          <Link to="/resources" className="mt-4 inline-block text-sm text-carmine hover:underline">
-            ← Back to Resources
-          </Link>
-        </div>
-      </PageWrapper>
-    )
-  }
+  if (!isValid || !meta) return <NotFoundPage />
 
   const top3 = resources?.filter((r) => r.priority === 'TOP_3') ?? []
   const expand = resources?.filter((r) => r.priority === 'EXPAND') ?? []
 
   return (
     <PageWrapper>
-      <div className="py-12 sm:py-16">
-        <Link
-          to="/resources"
-          className="mb-6 inline-flex items-center gap-1 text-xs text-dim-grey transition-colors hover:text-alabaster"
-        >
-          ← Khoury Resources
-        </Link>
-        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-carmine">
-          Khoury Resources
-        </p>
-        <h1 className="max-w-3xl text-3xl font-bold tracking-tight text-alabaster sm:text-4xl">
+      <div className="mb-2 text-xs text-dim-grey">
+        <Link to="/resources" className="hover:text-alabaster">Khoury Resources</Link>
+        <span className="mx-2">/</span>
+        <span>{meta.label}</span>
+      </div>
+
+      <div className="mb-10 mt-4 border-l-4 border-carmine pl-5">
+        <h1 className="text-3xl font-bold tracking-tight text-alabaster sm:text-4xl">
           {meta.label}
         </h1>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-dim-grey">
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-dim-grey">
           {meta.description}
         </p>
       </div>
 
-      <div className="border-t border-white/10 pb-16 pt-10">
-        {loading && <p className="text-sm text-dim-grey">Loading…</p>}
-        {error && <p className="text-sm text-carmine">Failed to load resources.</p>}
+      {error && (
+        <div role="alert" className="mb-8 rounded-md border border-carmine/40 bg-carmine/10 px-4 py-3 text-sm text-carmine">
+          Failed to load resources. Please try refreshing.
+        </div>
+      )}
 
-        {!loading && !error && resources && (
-          <div className="flex flex-col gap-10">
-            {top3.length > 0 && (
-              <section>
-                <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-dim-grey">
+      {loading ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-32 rounded-md bg-graphite/60" />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-10">
+          {top3.length > 0 && (
+            <section>
+              <div className="mb-5 border-l-4 border-carmine pl-4">
+                <h2 className="text-sm font-bold uppercase tracking-widest text-alabaster">
                   Top Resources
                 </h2>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {top3.map((r) => <ResourceCard key={r.id} resource={r} />)}
-                </div>
-              </section>
-            )}
+              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {top3.map((r) => <ResourceCard key={r.id} resource={r} />)}
+              </div>
+            </section>
+          )}
 
-            {expand.length > 0 && (
-              <section>
-                <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-dim-grey">
+          {expand.length > 0 && (
+            <section>
+              <div className="mb-5 border-l-4 border-copper pl-4">
+                <h2 className="text-sm font-bold uppercase tracking-widest text-alabaster">
                   More Resources
                 </h2>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {expand.map((r) => <ResourceCard key={r.id} resource={r} />)}
-                </div>
-              </section>
-            )}
+              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {expand.map((r) => <ResourceCard key={r.id} resource={r} />)}
+              </div>
+            </section>
+          )}
 
-            {resources.length === 0 && (
-              <p className="text-sm text-dim-grey">No resources yet.</p>
-            )}
-          </div>
-        )}
-      </div>
+          {resources?.length === 0 && (
+            <p className="text-sm text-dim-grey">No resources yet.</p>
+          )}
+        </div>
+      )}
     </PageWrapper>
   )
 }
