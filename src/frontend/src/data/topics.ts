@@ -42,6 +42,7 @@ export interface TopicEntry {
   category: TopicCategory
   order: number
   description: string
+  is_featured?: boolean
 }
 
 export const TOPICS: TopicEntry[] = [
@@ -51,6 +52,7 @@ export const TOPICS: TopicEntry[] = [
     slug: 'network-security',
     category: 'build_and_secure',
     order: 1,
+    is_featured: true,
     description:
       'Protecting computer networks and the data that travels across them. Firewalls, encryption, segmentation, and traffic monitoring help prevent unauthorized access and detect malicious activity.',
   },
@@ -67,6 +69,7 @@ export const TOPICS: TopicEntry[] = [
     slug: 'application-security',
     category: 'build_and_secure',
     order: 3,
+    is_featured: true,
     description:
       'Protecting software from vulnerabilities that attackers can exploit. Includes secure coding, vulnerability testing, authentication controls, and regular updates.',
   },
@@ -117,6 +120,7 @@ export const TOPICS: TopicEntry[] = [
     slug: 'penetration-testing',
     category: 'attack_and_defend',
     order: 1,
+    is_featured: true,
     description:
       'Simulating real-world attacks to identify vulnerabilities before malicious actors exploit them. Uses controlled techniques to evaluate how well systems and defenses hold up.',
   },
@@ -185,6 +189,7 @@ export interface LearningPath {
   slug: string
   description: string
   topicSlugs: string[]
+  topicFocus: Record<string, string>
   color: string
 }
 
@@ -192,43 +197,89 @@ export const LEARNING_PATHS: LearningPath[] = [
   {
     label: 'Foundational',
     slug: 'foundational',
-    description: 'Topics that appear across nearly every area of the field and form the backbone of most security roles.',
+    description:
+      'Build the core technical knowledge that shows up across nearly every area of cybersecurity. Best starting point if you want a strong, well-rounded foundation.',
     topicSlugs: ['network-security', 'cryptography', 'system-os-security', 'security-engineering', 'application-security'],
+    topicFocus: {
+      'network-security': 'Focus on how data moves and how attackers exploit networks',
+      'cryptography': 'Focus on how encryption and hashing protect data',
+      'system-os-security': 'Focus on how systems enforce access and isolate processes',
+      'security-engineering': 'Focus on how to design systems with security built in',
+      'application-security': 'Focus on how vulnerabilities appear in software and how to prevent them',
+    },
     color: '#c8102e',
   },
   {
     label: 'Career-Focused',
     slug: 'career-focused',
-    description: 'The skills most commonly requested in security job postings and internships.',
+    description:
+      'Prioritize the skills most commonly expected in internships and entry-level roles. Focused on what employers actually look for.',
     topicSlugs: ['network-security', 'security-operations', 'cloud-security', 'incident-response-forensics', 'application-security'],
+    topicFocus: {
+      'network-security': 'Focus on analyzing traffic and identifying suspicious behavior',
+      'security-operations': 'Focus on monitoring alerts and investigating security events',
+      'cloud-security': 'Focus on identity management and common cloud misconfigurations',
+      'incident-response-forensics': 'Focus on detecting, containing, and investigating breaches',
+      'application-security': 'Focus on identifying common vulnerabilities in real-world systems',
+    },
     color: '#a4804a',
   },
   {
     label: 'Defensive / Blue Team',
     slug: 'blue-team',
-    description: 'Tools and techniques defenders use to monitor systems and protect infrastructure.',
+    description:
+      'Learn how organizations detect, investigate, and respond to cyber threats. Focuses on monitoring systems and protecting infrastructure.',
     topicSlugs: ['network-security', 'security-operations', 'threat-intelligence', 'incident-response-forensics', 'cloud-security'],
+    topicFocus: {
+      'network-security': 'Focus on detecting suspicious traffic and lateral movement',
+      'security-operations': 'Focus on monitoring systems and triaging alerts',
+      'threat-intelligence': 'Focus on understanding attacker behavior and indicators of compromise',
+      'incident-response-forensics': 'Focus on investigating incidents and analyzing evidence',
+      'cloud-security': 'Focus on monitoring environments and securing configurations',
+    },
     color: '#3b82f6',
   },
   {
     label: 'Offensive / Red Team',
     slug: 'red-team',
-    description: 'How attackers discover and exploit weaknesses — for those interested in adversarial thinking.',
+    description:
+      'Explore how attackers find and exploit weaknesses in systems. Focused on testing defenses and thinking like an adversary.',
     topicSlugs: ['penetration-testing', 'social-engineering', 'application-security', 'system-os-security', 'network-security'],
+    topicFocus: {
+      'penetration-testing': 'Focus on finding and exploiting vulnerabilities in systems',
+      'social-engineering': 'Focus on manipulating human behavior to gain access',
+      'application-security': 'Focus on exploiting common web and software vulnerabilities',
+      'system-os-security': 'Focus on privilege escalation and system misconfigurations',
+      'network-security': 'Focus on scanning networks and moving between systems',
+    },
     color: '#f97316',
   },
   {
     label: 'Policy & Risk',
     slug: 'policy-risk',
-    description: 'The strategic and governance side of cybersecurity — frameworks, compliance, and ethics.',
+    description:
+      'Understand how organizations manage risk, set security policies, and meet legal and ethical obligations. Focused on strategy, governance, and decision-making.',
     topicSlugs: ['risk-assessment-frameworks', 'grc-data-privacy', 'ethics-of-cybersecurity', 'threat-intelligence'],
+    topicFocus: {
+      'risk-assessment-frameworks': 'Focus on identifying risks and applying frameworks to manage them',
+      'grc-data-privacy': 'Focus on managing policies, compliance, and sensitive data',
+      'ethics-of-cybersecurity': 'Focus on responsible security practices and decision-making',
+      'threat-intelligence': 'Focus on using threat insights to inform risk and strategy',
+    },
     color: '#8b5cf6',
   },
   {
     label: 'Edge Case',
     slug: 'edge-case',
-    description: 'Critical topics unlikely to appear in coursework — areas becoming increasingly important in modern security.',
-    topicSlugs: ['ai-ml-security', 'iot-physical-security'],
+    description:
+      'Explore important but often overlooked areas not typically covered in coursework. Great for expanding beyond the standard cybersecurity curriculum.',
+    topicSlugs: ['threat-intelligence', 'ai-ml-security', 'iot-physical-security', 'security-engineering'],
+    topicFocus: {
+      'threat-intelligence': 'Focus on tracking emerging threats and attacker trends',
+      'ai-ml-security': 'Focus on how machine learning systems can be attacked or manipulated',
+      'iot-physical-security': 'Focus on securing connected devices and physical systems',
+      'security-engineering': 'Focus on designing systems to be secure from the start',
+    },
     color: '#10b981',
   },
 ]

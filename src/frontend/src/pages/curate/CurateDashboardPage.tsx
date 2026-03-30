@@ -22,6 +22,11 @@ const SECTIONS = [
     description: 'Manage student club listings and topic associations.',
     to: '/curate/clubs',
   },
+  {
+    label: 'Khoury Resources',
+    description: 'Manage university resource links across all categories.',
+    to: '/curate/khoury-resources',
+  },
 ]
 
 export function CurateDashboardPage() {

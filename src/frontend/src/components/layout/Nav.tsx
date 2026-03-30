@@ -22,11 +22,14 @@ const COURSES_LINKS = [
   { label: 'Supporting Courses', to: '/courses/group/Support' },
 ]
 
-const KHOURY_PLACEHOLDERS = [
-  'Lorem ipsum dolor',
-  'Sit amet consectetur',
-  'Adipiscing elit sed',
-  'Do eiusmod tempor',
+const KHOURY_LINKS = [
+  { label: 'General University', to: '/resources/general_university' },
+  { label: 'Advising & Degree Planning', to: '/resources/advising_degree_planning' },
+  { label: 'Co-op & Career Planning', to: '/resources/coop_career_planning' },
+  { label: 'Clubs & On-Campus Events', to: '/resources/clubs_on_campus_events' },
+  { label: 'Scholarship & Financial Aid', to: '/resources/scholarship_financial_aid' },
+  { label: 'Undergraduate Research', to: '/resources/undergraduate_research' },
+  { label: 'Wellbeing & Mental Health', to: '/resources/wellbeing_mental_health' },
 ]
 
 const triggerCls =
@@ -128,18 +131,20 @@ export function Nav() {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                {/* Khoury — placeholders */}
+                {/* Khoury Resources */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className={triggerCls}>KHOURY</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="w-52 p-1">
-                      {KHOURY_PLACEHOLDERS.map((label) => (
-                        <li key={label}>
-                          <span className="block cursor-not-allowed rounded px-3 py-2 text-sm text-dim-grey/60 select-none">
-                            {label}
-                          </span>
+                    <ul className="w-56 p-1">
+                      {KHOURY_LINKS.map((link) => (
+                        <li key={link.to}>
+                          <Link to={link.to} className={itemCls}>{link.label}</Link>
                         </li>
                       ))}
+                      <li className="my-1 border-t border-white/10" />
+                      <li>
+                        <Link to="/resources" className={footerLinkCls}>All Resources →</Link>
+                      </li>
                     </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
@@ -197,17 +202,11 @@ export function Nav() {
               links={[...COURSES_LINKS, { label: 'All Courses →', to: '/courses' }]}
               onNavigate={() => setMenuOpen(false)}
             />
-            <div className="mt-2 border-t border-white/10 pt-4">
-              <p className="mb-2 px-2 text-xs font-semibold tracking-widest text-dim-grey">KHOURY</p>
-              {KHOURY_PLACEHOLDERS.map((label) => (
-                <span
-                  key={label}
-                  className="block rounded px-2 py-2.5 text-sm text-dim-grey/60 select-none"
-                >
-                  {label}
-                </span>
-              ))}
-            </div>
+            <MobileSection
+              label="KHOURY"
+              links={[...KHOURY_LINKS, { label: 'All Resources →', to: '/resources' }]}
+              onNavigate={() => setMenuOpen(false)}
+            />
           </div>
         </nav>
       )}

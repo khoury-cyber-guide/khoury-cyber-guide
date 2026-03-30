@@ -22,6 +22,10 @@ import { CurateProfessorsPage } from '@/pages/curate/professors/CurateProfessors
 import { CurateProfessorFormPage } from '@/pages/curate/professors/CurateProfessorFormPage'
 import { CurateClubsPage } from '@/pages/curate/clubs/CurateClubsPage'
 import { CurateClubFormPage } from '@/pages/curate/clubs/CurateClubFormPage'
+import { KhouryResourcesHubPage } from '@/pages/KhouryResourcesHubPage'
+import { KhouryResourcesCategoryPage } from '@/pages/KhouryResourcesCategoryPage'
+import { CurateKhouryResourcesPage } from '@/pages/curate/khoury-resources/CurateKhouryResourcesPage'
+import { CurateKhouryResourceFormPage } from '@/pages/curate/khoury-resources/CurateKhouryResourceFormPage'
 
 export default function App() {
   return (
@@ -44,6 +48,8 @@ export default function App() {
                     <Route path="/courses" element={<CoursesPage />} />
                     <Route path="/courses/group/:tag" element={<CourseGroupPage />} />
                     <Route path="/courses/:id" element={<CourseDetailPage />} />
+                    <Route path="/resources" element={<KhouryResourcesHubPage />} />
+                    <Route path="/resources/:category" element={<KhouryResourcesCategoryPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                   </Routes>
                 </div>
@@ -67,6 +73,9 @@ export default function App() {
               <Route path="clubs" element={<CurateClubsPage />} />
               <Route path="clubs/new" element={<CurateClubFormPage />} />
               <Route path="clubs/:id/edit" element={<CurateClubFormPage />} />
+              <Route path="khoury-resources" element={<CurateKhouryResourcesPage />} />
+              <Route path="khoury-resources/new" element={<CurateKhouryResourceFormPage />} />
+              <Route path="khoury-resources/:id/edit" element={<CurateKhouryResourceFormPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

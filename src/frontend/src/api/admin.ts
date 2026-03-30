@@ -15,6 +15,18 @@ type ProfessorCreate = {
 
 type ProfessorUpdate = Partial<ProfessorCreate>
 
+type KhouryResourceCreate = {
+  name: string
+  description?: string
+  url?: string
+  category: string
+  priority?: string
+  is_featured?: boolean
+  misc?: Record<string, unknown>
+}
+
+type KhouryResourceUpdate = Partial<KhouryResourceCreate>
+
 type ClubCreate = {
   name: string
   location: string
@@ -73,3 +85,13 @@ export const adminUpdateClub = (token: string, id: number, data: ClubUpdate) =>
 
 export const adminDeleteClub = (token: string, id: number) =>
   apiClient.delete(`/api/clubs/${id}`, auth(token))
+
+// Khoury Resources
+export const adminCreateKhouryResource = (token: string, data: KhouryResourceCreate) =>
+  apiClient.post('/api/khoury-resources', data, auth(token))
+
+export const adminUpdateKhouryResource = (token: string, id: number, data: KhouryResourceUpdate) =>
+  apiClient.patch(`/api/khoury-resources/${id}`, data, auth(token))
+
+export const adminDeleteKhouryResource = (token: string, id: number) =>
+  apiClient.delete(`/api/khoury-resources/${id}`, auth(token))
