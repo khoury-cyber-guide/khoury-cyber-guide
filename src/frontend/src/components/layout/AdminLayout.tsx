@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { label: 'Courses', to: '/curate/courses' },
   { label: 'Professors', to: '/curate/professors' },
   { label: 'Clubs', to: '/curate/clubs' },
+  { label: 'Khoury Resources', to: '/curate/khoury-resources' },
 ]
 
 export function AdminLayout() {

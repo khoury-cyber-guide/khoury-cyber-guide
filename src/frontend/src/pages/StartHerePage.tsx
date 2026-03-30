@@ -152,7 +152,7 @@ export function StartHerePage() {
   return (
     <PageWrapper>
       {/* Q1 */}
-      <div className="py-12 sm:py-16">
+      <div className="flex min-h-[calc(100svh-8rem)] flex-col justify-center py-16">
         <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-carmine">
           Start Here
         </p>
@@ -230,7 +230,7 @@ export function StartHerePage() {
 
       {/* Our Picks */}
       {hasBestOf && (
-        <div className="border-t border-white/10 py-12">
+        <div className="border-t-2 border-white/10 py-16">
           <div className="mb-8 border-l-4 border-copper pl-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-alabaster">Our Picks</h2>
             <p className="mt-1 text-sm text-dim-grey">
@@ -304,7 +304,7 @@ export function StartHerePage() {
       )}
 
       {/* Learning Paths */}
-      <div className="border-t border-white/10 pb-16 pt-12">
+      <div className="border-t border-white/10 pb-16 pt-16">
         <div className="mb-6 border-l-4 border-carmine pl-4">
           <h2 className="text-sm font-bold uppercase tracking-widest text-alabaster">Or browse by learning path</h2>
           <p className="mt-1 text-sm text-dim-grey">
@@ -366,7 +366,7 @@ export function StartHerePage() {
             onClick={() => setOpenPath(null)}
             aria-hidden="true"
           />
-          <div className="relative max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-lg border border-white/10 bg-[#1a1a1a] p-6 shadow-xl">
+          <div className="relative max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-lg border border-white/10 bg-background p-6 shadow-xl">
             <button
               type="button"
               onClick={() => setOpenPath(null)}
