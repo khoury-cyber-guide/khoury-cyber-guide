@@ -21,11 +21,14 @@ def _apply_relationships(course: Course, payload, db: Session) -> None:
 @router.get("", response_model=list[CourseSummary])
 def list_courses(
     category_tag: CourseCategoryTag | None = Query(default=None),
+    is_featured: bool | None = Query(default=None),
     db: Session = Depends(get_db),
 ):
     q = db.query(Course)
     if category_tag is not None:
         q = q.filter(cast(Course.category_tag, JSONB).contains([category_tag.value]))
+    if is_featured is not None:
+        q = q.filter(Course.is_featured == is_featured)
     return q.order_by(Course.course_program, Course.course_code).all()
 
 

@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from app.auth import verify_admin
 from app.database import Base, engine
 from app.models import AdminUser
-from app.routers import clubs, courses, professors, topics
+from app.routers import clubs, courses, khoury_resources, professors, topics
 from app.schemas import AdminVerifyResponse
 
 Base.metadata.create_all(bind=engine)
@@ -48,6 +48,7 @@ app.include_router(topics.router)
 app.include_router(courses.router)
 app.include_router(professors.router)
 app.include_router(clubs.router)
+app.include_router(khoury_resources.router)
 
 
 @app.post("/api/admin/verify", response_model=AdminVerifyResponse)

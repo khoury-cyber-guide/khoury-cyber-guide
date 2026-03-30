@@ -44,6 +44,20 @@ class ClassType(StrEnum):
     IN_PERSON = "IN-PERSON"
     BOTH = "BOTH"
 
+class KhouryResourceCategory(StrEnum):
+    GENERAL_UNIVERSITY = "general_university"
+    ADVISING_DEGREE_PLANNING = "advising_degree_planning"
+    COOP_CAREER_PLANNING = "coop_career_planning"
+    CLUBS_ON_CAMPUS_EVENTS = "clubs_on_campus_events"
+    SCHOLARSHIP_FINANCIAL_AID = "scholarship_financial_aid"
+    UNDERGRADUATE_RESEARCH = "undergraduate_research"
+    WELLBEING_MENTAL_HEALTH = "wellbeing_mental_health"
+
+class KhouryResourcePriority(StrEnum):
+    TOP_3 = "TOP_3"
+    EXPAND = "EXPAND"
+    IF_SPACE = "IF_SPACE"
+
 class Tags(StrEnum):
     UGRAD = "Undergraduate"
     GRAD = "Graduate"
@@ -96,6 +110,7 @@ class CourseSummary(BaseModel):
     title: str
     description: str
     category_tag: list[str]
+    is_featured: bool
 
     model_config = {"from_attributes": True}
 
@@ -201,6 +216,7 @@ class CourseCreate(BaseModel):
     avg_section_count: dict = {}
     avg_class_size: dict = {}
     notes: str = ""
+    is_featured: bool = False
     misc: dict = {}
     prereq_ids: list[int] = []
     professor_ids: list[int] = []
@@ -230,6 +246,7 @@ class CourseRead(BaseModel):
     avg_section_count: dict
     avg_class_size: dict
     notes: str
+    is_featured: bool
     topics: list[TopicSummary] = []
     prereqs: list[CourseSummary] = []
     past_professors: list[ProfessorSummary] = []
@@ -255,6 +272,7 @@ class CourseUpdate(BaseModel):
     avg_section_count: dict | None = None
     avg_class_size: dict | None = None
     notes: str | None = None
+    is_featured: bool | None = None
     misc: dict | None = None
     prereq_ids: list[int] | None = None
     professor_ids: list[int] | None = None
@@ -442,3 +460,48 @@ class ClubUpdate(BaseModel):
     url: str | None = None
     misc: dict | None = None
     topic_ids: list[int] | None = None
+
+#---------------------------------------------------------
+# KhouryResource Schemas
+#---------------------------------------------------------
+class KhouryResourceCreate(BaseModel):
+    name: str
+    description: str = ""
+    url: str = ""
+    category: KhouryResourceCategory
+    priority: KhouryResourcePriority = KhouryResourcePriority.EXPAND
+    is_featured: bool = False
+    misc: dict = {}
+
+class KhouryResourceSummary(BaseModel):
+    id: int
+    name: str
+    description: str
+    url: str
+    category: str
+    priority: str
+    is_featured: bool
+
+    model_config = {"from_attributes": True}
+
+class KhouryResourceRead(BaseModel):
+    id: int
+    name: str
+    description: str
+    url: str
+    category: str
+    priority: str
+    is_featured: bool
+    misc: dict
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+class KhouryResourceUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
+    url: str | None = None
+    category: KhouryResourceCategory | None = None
+    priority: KhouryResourcePriority | None = None
+    is_featured: bool | None = None
+    misc: dict | None = None

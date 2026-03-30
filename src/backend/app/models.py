@@ -108,10 +108,11 @@ class Course(Base):
     avg_section_count = Column(JSON, nullable=False, default=dict, server_default="{}")
     avg_class_size = Column(JSON, nullable=False, default=dict, server_default="{}")
     notes = Column(Text, nullable=False, default="", server_default="")
+    is_featured = Column(Boolean, nullable=False, default=False, server_default="false")
 
     misc = Column(JSON, nullable=False, default=dict, server_default="{}")
     created_at = Column(DateTime(timezone=True), default=func.now(), server_default=func.now())
-    
+
 class Professor(Base):
     __tablename__ = "professors"
     
@@ -180,6 +181,21 @@ class Resume(Base):
     misc = Column(JSON, nullable=False, default=dict, server_default="{}")
     created_at = Column(DateTime(timezone=True), default=func.now(), server_default=func.now())
     
+class KhouryResource(Base):
+    __tablename__ = "khoury_resources"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    description = Column(Text, nullable=False, default="", server_default="")
+    url = Column(Text, nullable=False, default="", server_default="")
+    category = Column(String(64), nullable=False, index=True)
+    priority = Column(String(16), nullable=False, default="EXPAND", server_default="EXPAND")
+    is_featured = Column(Boolean, nullable=False, default=False, server_default="false")
+
+    misc = Column(JSON, nullable=False, default=dict, server_default="{}")
+    created_at = Column(DateTime(timezone=True), default=func.now(), server_default=func.now())
+
+
 class Club(Base):
     __tablename__ = "clubs"
     
