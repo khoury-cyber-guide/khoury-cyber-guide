@@ -84,11 +84,18 @@ class ResourceItem(BaseModel):
     url: HttpUrl
     description: str = ""
 
+class ToolItem(BaseModel):
+    name: str
+    download_url: HttpUrl | None = None
+    support_url: HttpUrl | None = None
+    description: str = ""
+
 class OffCampus(BaseModel):
     certifications: list[ResourceItem] = []
     learning_tools: list[ResourceItem] = []
     blogs_newsletters: list[ResourceItem] = []
-    tools: list[ResourceItem] = []
+    tools: list[ToolItem] = []
+    other_resources: list[ResourceItem] = []
 
 #---------------------------------------------------------
 # Summary Schemas

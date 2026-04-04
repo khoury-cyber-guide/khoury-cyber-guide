@@ -45,15 +45,24 @@ export interface ResourceItem {
   description?: string
 }
 
+export interface ToolItem {
+  name: string
+  download_url?: string
+  support_url?: string
+  description?: string
+}
+
 export interface OffCampus {
   certifications: ResourceItem[]
   learning_tools: ResourceItem[]
   blogs_newsletters: ResourceItem[]
-  tools: ResourceItem[]
+  tools: ToolItem[]
+  other_resources: ResourceItem[]
 }
 
 export interface TopicMisc {
   what_is?: string
+  common_attacks_title?: string
   common_attacks?: string
   why_care?: string
   still_confused?: ResourceItem[]

@@ -5,6 +5,7 @@ import { useAdminAuth } from '@/hooks/useAdminAuth'
 import { getTopicBySlug } from '@/api/topics'
 import { adminCreateTopic, adminUpdateTopic } from '@/api/admin'
 import { KVPairInput } from '@/components/shared/KVPairInput'
+import { ToolItemInput, type ToolEntry } from '@/components/shared/ToolItemInput'
 import apiClient from '@/api/client'
 import type { TopicCategory } from '@/types/topic'
 
@@ -23,6 +24,21 @@ function toEntries(items: { name: string; url: string; description?: string }[] 
 
 function fromEntries(entries: ResourceEntry[]) {
   return entries.filter((e) => e.name && e.url)
+}
+
+function toToolEntries(items: { name: string; download_url?: string; support_url?: string; description?: string }[] = []): ToolEntry[] {
+  return items.map(({ name, download_url, support_url, description }) => ({
+    name, download_url: download_url ?? '', support_url: support_url ?? '', description: description ?? '',
+  }))
+}
+
+function fromToolEntries(entries: ToolEntry[]) {
+  return entries.filter((e) => e.name).map(({ name, download_url, support_url, description }) => ({
+    name,
+    ...(download_url && { download_url }),
+    ...(support_url && { support_url }),
+    ...(description && { description }),
+  }))
 }
 
 function slugify(title: string): string {
@@ -124,9 +140,11 @@ export function CurateTopicFormPage() {
   const [certifications, setCertifications] = useState<ResourceEntry[]>([])
   const [learningTools, setLearningTools] = useState<ResourceEntry[]>([])
   const [blogsNewsletters, setBlogsNewsletters] = useState<ResourceEntry[]>([])
-  const [tools, setTools] = useState<ResourceEntry[]>([])
+  const [tools, setTools] = useState<ToolEntry[]>([])
+  const [offCampusOtherResources, setOffCampusOtherResources] = useState<ResourceEntry[]>([])
 
   const [whatIs, setWhatIs] = useState('')
+  const [commonAttacksTitle, setCommonAttacksTitle] = useState('')
   const [commonAttacks, setCommonAttacks] = useState('')
   const [whyCare, setWhyCare] = useState('')
   const [stillConfused, setStillConfused] = useState<ResourceEntry[]>([])
@@ -163,10 +181,12 @@ export function CurateTopicFormPage() {
         setCertifications(toEntries(t.off_campus?.certifications))
         setLearningTools(toEntries(t.off_campus?.learning_tools))
         setBlogsNewsletters(toEntries(t.off_campus?.blogs_newsletters))
-        setTools(toEntries(t.off_campus?.tools))
+        setTools(toToolEntries(t.off_campus?.tools))
+        setOffCampusOtherResources(toEntries(t.off_campus?.other_resources))
 
         const m = t.misc ?? {}
         setWhatIs(m.what_is ?? '')
+        setCommonAttacksTitle(m.common_attacks_title ?? '')
         setCommonAttacks(m.common_attacks ?? '')
         setWhyCare(m.why_care ?? '')
         setStillConfused(toEntries(m.still_confused))
@@ -200,10 +220,12 @@ export function CurateTopicFormPage() {
         certifications: fromEntries(certifications),
         learning_tools: fromEntries(learningTools),
         blogs_newsletters: fromEntries(blogsNewsletters),
-        tools: fromEntries(tools),
+        tools: fromToolEntries(tools),
+        other_resources: fromEntries(offCampusOtherResources),
       },
       misc: {
         ...(whatIs && { what_is: whatIs }),
+        ...(commonAttacksTitle && { common_attacks_title: commonAttacksTitle }),
         ...(commonAttacks && { common_attacks: commonAttacks }),
         ...(whyCare && { why_care: whyCare }),
         ...(stillConfused.length && { still_confused: fromEntries(stillConfused) }),
@@ -312,7 +334,6 @@ export function CurateTopicFormPage() {
 
           {[
             { id: 'what_is', label: 'What is it? (extended)', value: whatIs, set: setWhatIs },
-            { id: 'common_attacks', label: 'Common attacks', value: commonAttacks, set: setCommonAttacks },
             { id: 'why_care', label: 'Why care?', value: whyCare, set: setWhyCare },
           ].map((f) => (
             <div key={f.id} className="flex flex-col gap-1.5">
@@ -326,6 +347,25 @@ export function CurateTopicFormPage() {
               />
             </div>
           ))}
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="common_attacks_title" className={labelCls}>Common attacks — section title</label>
+            <input
+              id="common_attacks_title"
+              type="text"
+              value={commonAttacksTitle}
+              onChange={(e) => setCommonAttacksTitle(e.target.value)}
+              placeholder="Common Attacks"
+              className={inputCls}
+            />
+            <textarea
+              id="common_attacks"
+              value={commonAttacks}
+              onChange={(e) => setCommonAttacks(e.target.value)}
+              rows={4}
+              className={inputCls}
+            />
+          </div>
 
           <KVPairInput label="Still confused? (links)" items={stillConfused} onChange={setStillConfused} />
           <KVPairInput label="Active research" items={activeResearch} onChange={setActiveResearch} />
@@ -359,7 +399,18 @@ export function CurateTopicFormPage() {
           <KVPairInput label="Certifications" items={certifications} onChange={setCertifications} />
           <KVPairInput label="Online learning tools" items={learningTools} onChange={setLearningTools} />
           <KVPairInput label="Blogs / newsletters / discords" items={blogsNewsletters} onChange={setBlogsNewsletters} />
-          <KVPairInput label="Common tools & software" items={tools} onChange={setTools} />
+        </div>
+
+        {/* Common Tools & Software */}
+        <div className="flex flex-col gap-4 rounded-lg border border-white/10 p-5">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-dim-grey">Common Tools &amp; Software</h2>
+          <ToolItemInput label="Tools" items={tools} onChange={setTools} />
+        </div>
+
+        {/* Other Resources */}
+        <div className="flex flex-col gap-4 rounded-lg border border-white/10 p-5">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-dim-grey">Other Resources</h2>
+          <KVPairInput label="Resources" items={offCampusOtherResources} onChange={setOffCampusOtherResources} />
         </div>
 
         {error && (

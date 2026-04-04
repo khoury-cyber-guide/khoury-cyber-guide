@@ -8,7 +8,7 @@ import { ResourceSection } from '@/components/shared/ResourceSection'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CATEGORY_META } from '@/data/topics'
-import type { TopicDetail, ResourceItem, CourseSummaryInTopic, KhouryResourceInTopic } from '@/types/topic'
+import type { TopicDetail, ResourceItem, ToolItem, CourseSummaryInTopic, KhouryResourceInTopic } from '@/types/topic'
 import { NotFoundPage } from './NotFoundPage'
 
 const VALID_CATEGORIES = new Set(['build_and_secure', 'attack_and_defend', 'strategy_and_governance'])
@@ -110,11 +110,21 @@ function ResourceItemRow({ item }: { item: ResourceItem }) {
             className="w-full max-w-sm rounded-lg border border-white/10 bg-graphite p-5"
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="font-medium text-alabaster">{item.name}</p>
+            <div className="flex items-start justify-between gap-2">
+              <p className="font-medium text-alabaster">{item.name}</p>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="shrink-0 text-dim-grey hover:text-alabaster"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
             {item.description && (
               <p className="mt-2 text-sm leading-relaxed text-dim-grey">{item.description}</p>
             )}
-            <div className="mt-4 flex items-center justify-between">
+            <div className="mt-4">
               <a
                 href={item.url}
                 target="_blank"
@@ -123,13 +133,6 @@ function ResourceItemRow({ item }: { item: ResourceItem }) {
               >
                 Open link <span aria-hidden="true">↗</span>
               </a>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="text-xs text-dim-grey hover:text-alabaster"
-              >
-                Close
-              </button>
             </div>
           </div>
         </div>
@@ -140,6 +143,78 @@ function ResourceItemRow({ item }: { item: ResourceItem }) {
 
 function renderResourceItem(item: ResourceItem) {
   return <ResourceItemRow item={item} />
+}
+
+function ToolItemRow({ item }: { item: ToolItem }) {
+  const [open, setOpen] = useState(false)
+  const limit = 100
+  const long = !!item.description && item.description.length > limit
+  return (
+    <>
+      <div className="flex flex-col rounded-md border border-white/10 bg-graphite/40 p-3">
+        <span className="text-xs font-medium text-alabaster">{item.name}</span>
+        {item.description && (
+          <p className="text-xs text-dim-grey">
+            {long ? item.description.slice(0, limit).trimEnd() + '…' : item.description}
+            {long && (
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="ml-1 font-bold text-carmine hover:text-carmine/70"
+              >
+                more
+              </button>
+            )}
+          </p>
+        )}
+        <div className="flex flex-wrap gap-3">
+          {item.download_url && (
+            <a href={item.download_url} target="_blank" rel="noopener noreferrer" className="text-xs text-carmine hover:underline">
+              Download ↗
+            </a>
+          )}
+          {item.support_url && (
+            <a href={item.support_url} target="_blank" rel="noopener noreferrer" className="text-xs text-dim-grey hover:text-alabaster hover:underline">
+              Access Support ↗
+            </a>
+          )}
+        </div>
+      </div>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setOpen(false)}>
+          <div className="w-full max-w-sm rounded-lg border border-white/10 bg-graphite p-5" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-start justify-between gap-2">
+              <p className="font-medium text-alabaster">{item.name}</p>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="shrink-0 text-dim-grey hover:text-alabaster"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            {item.description && (
+              <p className="mt-2 text-sm leading-relaxed text-dim-grey">{item.description}</p>
+            )}
+            <div className="mt-4 flex flex-wrap gap-4">
+              {item.download_url && (
+                <a href={item.download_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-carmine hover:underline">
+                  Download ↗
+                </a>
+              )}
+              {item.support_url && (
+                <a href={item.support_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-dim-grey hover:text-alabaster hover:underline">
+                  Access Support ↗
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
 }
 
 function renderCourse(course: CourseSummaryInTopic) {
@@ -248,7 +323,7 @@ export function TopicDetailPage() {
             {commonAttacks && (
               <div>
                 <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-dim-grey">
-                  Common Attacks
+                  {topic.misc.common_attacks_title || 'Common Attacks'}
                 </h3>
                 <RichText text={commonAttacks} />
               </div>
@@ -266,6 +341,7 @@ export function TopicDetailPage() {
             {stillConfused.length > 0 && (
               <ResourceSection title="Still confused?" items={stillConfused} />
             )}
+
           </div>
         </div>
 
@@ -325,16 +401,44 @@ export function TopicDetailPage() {
                     renderItem={renderResourceItem}
                     emptyMessage="—"
                   />
-                  <GridBox
-                    title="Common Tools & Software"
-                    items={topic.off_campus.tools}
-                    renderItem={renderResourceItem}
-                    emptyMessage="—"
-                  />
                 </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+
+          {topic.off_campus.tools.length > 0 && (
+            <Accordion multiple defaultValue={['tools']}>
+              <AccordionItem value="tools" className="rounded-md border border-white/10 px-5">
+                <AccordionTrigger className="text-base font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
+                  Common Tools &amp; Software
+                </AccordionTrigger>
+                <AccordionContent className="pb-6 pt-2">
+                  <div className="flex flex-col gap-3">
+                    {topic.off_campus.tools.map((tool, i) => (
+                      <ToolItemRow key={i} item={tool} />
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
+
+          {topic.off_campus.other_resources?.length > 0 && (
+            <Accordion multiple defaultValue={['off-campus-other']}>
+              <AccordionItem value="off-campus-other" className="rounded-md border border-white/10 px-5">
+                <AccordionTrigger className="text-base font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
+                  Other Resources
+                </AccordionTrigger>
+                <AccordionContent className="pb-4 pt-2">
+                  <div className="flex flex-col rounded-md border border-white/10 bg-graphite/40 p-2">
+                    {topic.off_campus.other_resources.map((item, i) => (
+                      <ResourceItemRow key={i} item={item} />
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
         </div>
 
         {otherResources.length > 0 && (
