@@ -93,10 +93,18 @@ export function HomePage() {
         </Link>
         <Link
           to="/topics"
-          className="inline-flex items-center gap-2 rounded-md border border-white/10 px-5 py-2.5 text-sm font-semibold text-alabaster transition-colors hover:border-white/30"
+          className="inline-flex items-center gap-2 rounded-md border border-white/10 px-5 py-2.5 text-sm font-semibold text-alabaster transition-colors hover:border-carmine/60 hover:text-carmine"
         >
           Browse Topics
         </Link>
+        <a
+          href={EVENTS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-md border border-white/10 px-5 py-2.5 text-sm font-semibold text-alabaster transition-colors hover:border-carmine/60 hover:text-carmine"
+        >
+          Upcoming Events <span aria-hidden="true">↗</span>
+        </a>
       </div>
 
       {/* Commitment */}
@@ -112,25 +120,6 @@ export function HomePage() {
         </div>
       </div>
 
-      <hr className="border-white/10" />
-
-      {/* Upcoming Events */}
-      <div className="border-t border-white/10 py-8">
-        <p className="mb-4 text-lg font-bold tracking-tight text-alabaster">
-          Upcoming Events
-        </p>
-        <p className="mb-4 max-w-xl text-sm leading-relaxed text-dim-grey">
-          Check the Khoury events page for upcoming club events, career workshops, and industry talks.
-        </p>
-        <a
-          href={EVENTS_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-md border border-white/10 px-5 py-2.5 text-sm font-semibold text-alabaster transition-colors hover:border-white/30"
-        >
-          View Events <span aria-hidden="true">↗</span>
-        </a>
-      </div>
     </PageWrapper>
   )
 }
