@@ -217,6 +217,14 @@ export function StartHerePage() {
                 )
               })}
             </ul>
+            <button
+              type="button"
+              onClick={() => setOpenPath(resultPath.slug)}
+              className="mt-4 self-start text-xs font-medium transition-colors hover:underline"
+              style={{ color: resultPath.color }}
+            >
+              Read more →
+            </button>
           </div>
           <button
             type="button"
