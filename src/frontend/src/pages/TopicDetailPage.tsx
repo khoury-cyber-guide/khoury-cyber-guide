@@ -8,7 +8,7 @@ import { ResourceSection } from '@/components/shared/ResourceSection'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CATEGORY_META } from '@/data/topics'
-import type { TopicDetail, ResourceItem, CourseSummaryInTopic, ClubSummary } from '@/types/topic'
+import type { TopicDetail, ResourceItem, CourseSummaryInTopic, KhouryResourceInTopic } from '@/types/topic'
 import { NotFoundPage } from './NotFoundPage'
 
 const VALID_CATEGORIES = new Set(['build_and_secure', 'attack_and_defend', 'strategy_and_governance'])
@@ -158,19 +158,19 @@ function renderCourse(course: CourseSummaryInTopic) {
   )
 }
 
-function renderClub(club: ClubSummary) {
+function renderKhouryResource(resource: KhouryResourceInTopic) {
   return (
     <a
-      href={club.url || undefined}
-      target={club.url ? '_blank' : undefined}
+      href={resource.url || undefined}
+      target={resource.url ? '_blank' : undefined}
       rel="noopener noreferrer"
       className="group flex items-start gap-3 rounded px-2 py-1.5 transition-colors hover:bg-black/10"
     >
       <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-carmine" aria-hidden="true" />
       <div className="min-w-0">
-        <p className="text-sm font-medium text-alabaster group-hover:text-carmine">{club.name}</p>
-        {club.mission && (
-          <p className="mt-0.5 line-clamp-2 text-xs text-dim-grey">{club.mission}</p>
+        <p className="text-sm font-medium text-alabaster group-hover:text-carmine">{resource.name}</p>
+        {resource.description && (
+          <p className="mt-0.5 line-clamp-2 text-xs text-dim-grey">{resource.description}</p>
         )}
       </div>
     </a>
@@ -285,8 +285,8 @@ export function TopicDetailPage() {
                   />
                   <GridBox
                     title="Relevant Clubs"
-                    items={topic.clubs}
-                    renderItem={renderClub}
+                    items={topic.khoury_resources}
+                    renderItem={renderKhouryResource}
                     emptyMessage="—"
                   />
                   <GridBox

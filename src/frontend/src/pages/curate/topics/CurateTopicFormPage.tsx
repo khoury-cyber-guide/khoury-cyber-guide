@@ -10,7 +10,6 @@ import type { TopicCategory } from '@/types/topic'
 
 type ResourceEntry = { name: string; url: string; description: string }
 interface CourseSummary { id: number; course_program: string; course_code: number; title: string }
-interface ClubSummary { id: number; name: string }
 
 const CATEGORIES: { value: TopicCategory; label: string }[] = [
   { value: 'build_and_secure', label: 'Build & Secure' },
@@ -118,9 +117,9 @@ export function CurateTopicFormPage() {
   const [description, setDescription] = useState('')
 
   const [courseIds, setCourseIds] = useState<number[]>([])
-  const [clubIds, setClubIds] = useState<number[]>([])
+  const [khouryResourceIds, setKhouryResourceIds] = useState<number[]>([])
   const [availableCourses, setAvailableCourses] = useState<CourseSummary[]>([])
-  const [availableClubs, setAvailableClubs] = useState<ClubSummary[]>([])
+  const [availableKhouryResources, setAvailableKhouryResources] = useState<{ id: number; name: string }[]>([])
 
   const [certifications, setCertifications] = useState<ResourceEntry[]>([])
   const [learningTools, setLearningTools] = useState<ResourceEntry[]>([])
@@ -142,7 +141,7 @@ export function CurateTopicFormPage() {
     const c1 = new AbortController()
     const c2 = new AbortController()
     apiClient.get('/api/courses', { signal: c1.signal }).then((r) => setAvailableCourses(r.data)).catch(() => {})
-    apiClient.get('/api/clubs', { signal: c2.signal }).then((r) => setAvailableClubs(r.data)).catch(() => {})
+    apiClient.get('/api/khoury-resources', { signal: c2.signal, params: { category: 'clubs_on_campus_events' } }).then((r) => setAvailableKhouryResources(r.data)).catch(() => {})
     return () => { c1.abort(); c2.abort() }
   }, [])
 
@@ -159,7 +158,7 @@ export function CurateTopicFormPage() {
         setDescription(t.description)
 
         setCourseIds(t.courses.map((c) => c.id))
-        setClubIds(t.clubs.map((c) => c.id))
+        setKhouryResourceIds(t.khoury_resources.map((r: { id: number }) => r.id))
 
         setCertifications(toEntries(t.off_campus?.certifications))
         setLearningTools(toEntries(t.off_campus?.learning_tools))
@@ -196,7 +195,7 @@ export function CurateTopicFormPage() {
       order,
       description,
       course_ids: courseIds,
-      club_ids: clubIds,
+      khoury_resource_ids: khouryResourceIds,
       off_campus: {
         certifications: fromEntries(certifications),
         learning_tools: fromEntries(learningTools),
@@ -347,10 +346,10 @@ export function CurateTopicFormPage() {
 
           <SearchableCheckList
             label="Relevant clubs"
-            items={availableClubs}
-            selected={clubIds}
-            onChange={setClubIds}
-            renderLabel={(c) => c.name}
+            items={availableKhouryResources}
+            selected={khouryResourceIds}
+            onChange={setKhouryResourceIds}
+            renderLabel={(r) => r.name}
           />
         </div>
 

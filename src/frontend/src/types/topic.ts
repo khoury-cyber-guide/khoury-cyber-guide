@@ -71,15 +71,27 @@ export interface TopicCreate {
   misc?: Record<string, unknown>
   course_ids?: number[]
   club_ids?: number[]
+  khoury_resource_ids?: number[]
   professor_ids?: number[]
 }
 
 export type TopicUpdate = Partial<TopicCreate>
 
+export interface KhouryResourceInTopic {
+  id: number
+  name: string
+  description: string
+  url: string
+  category: string
+  priority: string
+  is_featured: boolean
+}
+
 export interface TopicDetail extends TopicSummary {
   off_campus: OffCampus
   courses: CourseSummaryInTopic[]
   clubs: ClubSummary[]
+  khoury_resources: KhouryResourceInTopic[]
   professors: ProfessorSummary[]
   misc: TopicMisc
   created_at: string

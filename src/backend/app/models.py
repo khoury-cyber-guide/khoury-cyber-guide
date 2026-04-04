@@ -28,6 +28,13 @@ topic_professors = Table(
     Column("professor_id", Integer, ForeignKey("professors.id"), primary_key=True),
 )
 
+topic_khoury_resources = Table(
+    "topic_khoury_resources",
+    Base.metadata,
+    Column("topic_id", Integer, ForeignKey("topics.id"), primary_key=True),
+    Column("khoury_resource_id", Integer, ForeignKey("khoury_resources.id"), primary_key=True),
+)
+
 course_prereqs = Table(
     "course_prereqs",
     Base.metadata,
@@ -63,6 +70,7 @@ class Topic(Base):
     courses = relationship("Course", secondary=topic_courses, back_populates="topics")
     clubs = relationship("Club", secondary=topic_clubs, back_populates="topics")
     professors = relationship("Professor", secondary=topic_professors, back_populates="topics")
+    khoury_resources = relationship("KhouryResource", secondary=topic_khoury_resources)
 
     # Optional rich content stored in misc:
     # misc.why_care, misc.secondary_section, misc.still_confused,

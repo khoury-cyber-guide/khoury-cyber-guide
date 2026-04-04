@@ -132,6 +132,17 @@ class ClubSummary(BaseModel):
 
     model_config = {"from_attributes": True}
 
+class KhouryResourceSummary(BaseModel):
+    id: int
+    name: str
+    description: str
+    url: str
+    category: str
+    priority: str
+    is_featured: bool
+
+    model_config = {"from_attributes": True}
+
 #---------------------------------------------------------
 # Admin
 #---------------------------------------------------------
@@ -152,6 +163,7 @@ class TopicCreate(BaseModel):
     misc: dict = {}
     course_ids: list[int] = []
     club_ids: list[int] = []
+    khoury_resource_ids: list[int] = []
     professor_ids: list[int] = []
 
     @field_validator("slug")
@@ -171,6 +183,7 @@ class TopicRead(BaseModel):
     off_campus: OffCampus
     courses: list[CourseSummary] = []
     clubs: list[ClubSummary] = []
+    khoury_resources: list[KhouryResourceSummary] = []
     professors: list[ProfessorSummary] = []
     misc: dict
     created_at: datetime
@@ -187,6 +200,7 @@ class TopicUpdate(BaseModel):
     misc: dict | None = None
     course_ids: list[int] | None = None
     club_ids: list[int] | None = None
+    khoury_resource_ids: list[int] | None = None
     professor_ids: list[int] | None = None
 
     @field_validator("slug")
@@ -472,17 +486,6 @@ class KhouryResourceCreate(BaseModel):
     priority: KhouryResourcePriority = KhouryResourcePriority.EXPAND
     is_featured: bool = False
     misc: dict = {}
-
-class KhouryResourceSummary(BaseModel):
-    id: int
-    name: str
-    description: str
-    url: str
-    category: str
-    priority: str
-    is_featured: bool
-
-    model_config = {"from_attributes": True}
 
 class KhouryResourceRead(BaseModel):
     id: int
