@@ -3,6 +3,8 @@ export type CourseCategoryTag =
   | 'CS Requirement'
   | 'CY Elective'
   | 'CY Requirement'
+  | 'Social Issues Requirement'
+  | 'Presentation Requirement'
 
 export interface CourseSummary {
   id: number
@@ -76,5 +78,13 @@ export const COURSE_CATEGORY_META: Record<CourseCategoryTag, { label: string; de
   'CY Elective': {
     label: 'Cybersecurity Elective Courses',
     description: 'Choose from approved cybersecurity electives to complete your degree.',
+  },
+  'Social Issues Requirement': {
+    label: 'Social Issues Requirement',
+    description: 'Courses fulfilling the social issues and ethics requirement.',
+  },
+  'Presentation Requirement': {
+    label: 'Presentation Requirement',
+    description: 'Courses fulfilling the oral presentation requirement.',
   },
 }

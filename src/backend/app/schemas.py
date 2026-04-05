@@ -21,6 +21,11 @@ class CourseProgram(StrEnum):
     EECE = "EECE"
     MATH = "MATH"
     ENGW = "ENGW"
+    COMM = "COMM"
+    CRIM = "CRIM"
+    LPSC = "LPSC"
+    POLS = "POLS"
+    THTR = "THTR"
 
 class CourseAttribute(StrEnum):
     Ethical_Reasoning = "Ethical Reasoning"
@@ -38,6 +43,8 @@ class CourseCategoryTag(StrEnum):
     CS_REQ = "CS Requirement"
     CY_ELECT = "CY Elective"
     CY_REQ = "CY Requirement"
+    SOCIAL_ISSUES = "Social Issues Requirement"
+    PRESENTATION = "Presentation Requirement"
 
 class ClassType(StrEnum):
     ONLINE = "ONLINE"

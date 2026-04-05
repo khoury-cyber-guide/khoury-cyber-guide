@@ -10,7 +10,7 @@ import type { CourseCategoryTag } from '@/types/course'
 interface CourseSummary { id: number; course_program: string; course_code: number; title: string }
 interface ProfessorSummary { id: number; full_name: string }
 
-const PROGRAMS = ['CY', 'CS', 'DS', 'EECE', 'MATH', 'ENGW']
+const PROGRAMS = ['CY', 'CS', 'DS', 'EECE', 'MATH', 'ENGW', 'COMM', 'CRIM', 'LPSC', 'POLS', 'THTR']
 const CLASS_TYPES = ['ONLINE', 'IN-PERSON', 'BOTH']
 
 const CATEGORY_TAGS: CourseCategoryTag[] = [

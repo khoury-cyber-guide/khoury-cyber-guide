@@ -14,6 +14,8 @@ const CATEGORY_ORDER: CourseCategoryTag[] = [
   'CS Requirement',
   'Support',
   'CY Elective',
+  'Social Issues Requirement',
+  'Presentation Requirement',
 ]
 
 export function CoursesPage() {
@@ -34,6 +36,8 @@ export function CoursesPage() {
       'CS Requirement': [],
       Support: [],
       'CY Elective': [],
+      'Social Issues Requirement': [],
+      'Presentation Requirement': [],
     },
   )
 
