@@ -111,7 +111,14 @@ function ResourceCard({ resource }: { resource: KhouryResourceSummary }) {
       rel="noopener noreferrer"
       className="flex flex-col gap-2 rounded-md border border-white/10 bg-graphite p-5 transition-colors hover:border-carmine/40"
     >
-      <p className="font-semibold text-alabaster">{resource.name}</p>
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="font-semibold text-alabaster">{resource.name}</p>
+        {resource.is_featured && (
+          <span className="rounded border border-copper/60 bg-copper/10 px-1.5 py-0.5 text-xs font-semibold text-copper">
+            ★ Our Pick
+          </span>
+        )}
+      </div>
       {resource.description && (
         <p className="text-sm leading-relaxed text-dim-grey">{resource.description}</p>
       )}

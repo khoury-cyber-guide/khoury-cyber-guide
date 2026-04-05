@@ -269,7 +269,7 @@ export function StartHerePage() {
               <section>
                 <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-dim-grey">Courses</p>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {featuredCourses.slice(0, 3).map((c) => (
+                  {featuredCourses.map((c) => (
                     <Link
                       key={c.id}
                       to={`/courses/${c.id}`}
@@ -290,7 +290,7 @@ export function StartHerePage() {
               <section>
                 <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-dim-grey">Khoury Resources</p>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {featuredResources.slice(0, 3).map((r) => (
+                  {featuredResources.map((r) => (
                     <a
                       key={r.id}
                       href={r.url}

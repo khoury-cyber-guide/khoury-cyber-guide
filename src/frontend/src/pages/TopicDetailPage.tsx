@@ -7,7 +7,7 @@ import { PageWrapper } from '@/components/layout/PageWrapper'
 import { ResourceSection } from '@/components/shared/ResourceSection'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CATEGORY_META } from '@/data/topics'
+import { CATEGORY_META, TOPICS } from '@/data/topics'
 import type { TopicDetail, ResourceItem, ToolItem, CourseSummaryInTopic, KhouryResourceInTopic } from '@/types/topic'
 import { NotFoundPage } from './NotFoundPage'
 
@@ -282,6 +282,7 @@ export function TopicDetailPage() {
 
   if (error || !topic) return <NotFoundPage />
 
+  const isFeatured = TOPICS.find((t) => t.slug === slug)?.is_featured ?? false
   const whatIs = topic.misc.what_is
   const commonAttacks = topic.misc.common_attacks
   const whyCare = topic.misc.why_care
@@ -302,9 +303,16 @@ export function TopicDetailPage() {
         <span className="text-alabaster">{topic.title}</span>
       </nav>
 
-      <h1 className="mt-4 text-3xl font-bold tracking-tight text-alabaster sm:text-4xl">
-        {topic.title}
-      </h1>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <h1 className="text-3xl font-bold tracking-tight text-alabaster sm:text-4xl">
+          {topic.title}
+        </h1>
+        {isFeatured && (
+          <span className="rounded border border-copper/60 bg-copper/10 px-2 py-0.5 text-xs font-semibold text-copper">
+            ★ Our Pick
+          </span>
+        )}
+      </div>
 
       <div className="mt-8 grid grid-cols-1 items-start gap-3 lg:grid-cols-3">
 

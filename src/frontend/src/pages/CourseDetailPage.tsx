@@ -66,6 +66,11 @@ export function CourseDetailPage() {
               Co-req
             </Badge>
           )}
+          {course.is_featured && (
+            <Badge variant="outline" className="border-copper/60 bg-copper/10 text-xs text-copper">
+              ★ Our Pick
+            </Badge>
+          )}
         </div>
         <h1 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight text-alabaster sm:text-4xl">
           {course.title}
