@@ -30,6 +30,7 @@ export function KhouryResourcesCategoryPage() {
       isValid
         ? getKhouryResources(signal, { category: category as KhouryResourceCategory })
         : Promise.resolve([]),
+    [category],
   )
 
   if (!isValid || !meta) return <NotFoundPage />

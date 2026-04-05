@@ -23,8 +23,9 @@ export function TopicCategoryPage() {
 
   useDocumentTitle(isValid ? meta.label : undefined)
 
-  const { data: topics, loading, error } = useApi<TopicSummary[]>((signal) =>
-    isValid ? getTopics(signal, cat) : Promise.resolve([]),
+  const { data: topics, loading, error } = useApi<TopicSummary[]>(
+    (signal) => isValid ? getTopics(signal, cat) : Promise.resolve([]),
+    [cat],
   )
 
   if (!isValid) return <NotFoundPage />

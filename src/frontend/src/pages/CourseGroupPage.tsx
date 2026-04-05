@@ -21,8 +21,9 @@ export function CourseGroupPage() {
 
   useDocumentTitle(isValid ? meta.label : undefined)
 
-  const { data: courses, loading, error } = useApi<CourseSummary[]>((signal) =>
-    isValid ? getCourses(signal, categoryTag) : Promise.resolve([]),
+  const { data: courses, loading, error } = useApi<CourseSummary[]>(
+    (signal) => isValid ? getCourses(signal, categoryTag) : Promise.resolve([]),
+    [categoryTag],
   )
 
   if (!isValid) return <NotFoundPage />

@@ -7,7 +7,7 @@ export interface ApiState<T> {
   refetch: () => void
 }
 
-export function useApi<T>(fetcher: (signal: AbortSignal) => Promise<T>): ApiState<T> {
+export function useApi<T>(fetcher: (signal: AbortSignal) => Promise<T>, deps: unknown[] = []): ApiState<T> {
   const [state, setState] = useState<Omit<ApiState<T>, 'refetch'>>({
     data: null,
     loading: true,
@@ -36,7 +36,8 @@ export function useApi<T>(fetcher: (signal: AbortSignal) => Promise<T>): ApiStat
       })
 
     return () => controller.abort()
-  }, [tick])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tick, ...deps])
 
   const refetch = useCallback(() => setTick((t) => t + 1), [])
 
