@@ -70,9 +70,16 @@ export function CourseGroupPage() {
               <Badge className="w-fit bg-carmine font-mono text-xs text-white">
                 {course.course_program} {course.course_code}
               </Badge>
-              <p className="font-medium text-alabaster transition-colors group-hover:text-carmine">
-                {course.title}
-              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-medium text-alabaster transition-colors group-hover:text-carmine">
+                  {course.title}
+                </p>
+                {course.is_featured && (
+                  <span className="rounded border border-copper/60 bg-copper/10 px-1.5 py-0.5 text-xs font-semibold text-copper">
+                    ★ Our Pick
+                  </span>
+                )}
+              </div>
               {course.description && (
                 <p className="line-clamp-2 text-xs leading-relaxed text-dim-grey">
                   {course.description}

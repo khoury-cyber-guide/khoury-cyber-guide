@@ -75,9 +75,16 @@ export function KhouryResourcesHubPage() {
                       rel="noopener noreferrer"
                       className="group flex flex-col gap-2 rounded-md border border-white/10 bg-graphite p-4 transition-colors hover:border-carmine/40"
                     >
-                      <p className="font-medium text-alabaster transition-colors group-hover:text-carmine">
-                        {r.name}
-                      </p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-medium text-alabaster transition-colors group-hover:text-carmine">
+                          {r.name}
+                        </p>
+                        {r.is_featured && (
+                          <span className="rounded border border-copper/60 bg-copper/10 px-1.5 py-0.5 text-xs font-semibold text-copper">
+                            ★ Our Pick
+                          </span>
+                        )}
+                      </div>
                       {r.description && (
                         <p className="line-clamp-2 text-xs leading-relaxed text-dim-grey">
                           {r.description}

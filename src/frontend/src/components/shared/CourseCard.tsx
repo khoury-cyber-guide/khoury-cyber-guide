@@ -22,9 +22,16 @@ export function CourseCard({ course, compact = false }: CourseCardProps) {
         {code}
       </Badge>
       <div className="min-w-0">
-        <p className="font-medium text-alabaster transition-colors group-hover:text-carmine">
-          {course.title}
-        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="font-medium text-alabaster transition-colors group-hover:text-carmine">
+            {course.title}
+          </p>
+          {course.is_featured && (
+            <span className="rounded border border-copper/60 bg-copper/10 px-1.5 py-0.5 text-xs font-semibold text-copper">
+              ★ Our Pick
+            </span>
+          )}
+        </div>
         {!compact && course.description && (
           <p className="mt-1 line-clamp-2 text-sm text-dim-grey">{course.description}</p>
         )}
