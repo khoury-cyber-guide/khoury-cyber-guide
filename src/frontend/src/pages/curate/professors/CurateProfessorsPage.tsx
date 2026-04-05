@@ -21,6 +21,7 @@ export function CurateProfessorsPage() {
     apiClient.get('/api/professors', { signal }).then((r) => r.data),
   )
   const [deleting, setDeleting] = useState<number | null>(null)
+  const [query, setQuery] = useState('')
 
   const handleDelete = async (id: number, name: string) => {
     if (!window.confirm(`Delete "${name}"? This cannot be undone.`)) return
@@ -50,6 +51,14 @@ export function CurateProfessorsPage() {
         </Link>
       </div>
 
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search professors…"
+        className="mb-4 w-full max-w-sm rounded border border-white/15 bg-graphite px-3 py-2 text-sm text-alabaster placeholder:text-dim-grey/50 focus:border-carmine/60 focus:outline-none"
+      />
+
       {error && <p role="alert" className="mb-4 text-sm text-carmine">Failed to load professors.</p>}
 
       {loading ? (
@@ -65,7 +74,9 @@ export function CurateProfessorsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {(professors ?? []).map((p) => (
+              {(professors ?? []).filter((p) =>
+                `${p.full_name} ${p.area_of_focus}`.toLowerCase().includes(query.toLowerCase())
+              ).map((p) => (
                 <tr key={p.id} className="transition-colors hover:bg-graphite/20">
                   <td className="px-4 py-3 font-medium text-alabaster">{p.full_name}</td>
                   <td className="px-4 py-3 text-dim-grey">{p.area_of_focus || '—'}</td>

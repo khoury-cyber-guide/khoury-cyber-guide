@@ -344,7 +344,7 @@ export function CurateTopicFormPage() {
         setActiveResearch(toEntries(m.active_research))
         setOtherResources(toEntries(m.other_resources))
       })
-      .catch(() => setError('Failed to load topic.'))
+      .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError('Failed to load topic.') })
       .finally(() => setLoading(false))
     return () => controller.abort()
   }, [isEdit, slug])

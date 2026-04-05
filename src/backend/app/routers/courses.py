@@ -46,6 +46,11 @@ def create_course(
     db: Session = Depends(get_db),
     _: AdminUser = Depends(verify_admin),
 ):
+    if db.query(Course).filter(
+        Course.course_program == payload.course_program,
+        Course.course_code == payload.course_code,
+    ).first():
+        raise HTTPException(status_code=409, detail=f"{payload.course_program} {payload.course_code} already exists")
     course = Course(**payload.model_dump(exclude={"prereq_ids", "professor_ids"}))
     db.add(course)
     db.flush()

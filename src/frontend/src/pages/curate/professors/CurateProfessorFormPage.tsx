@@ -40,7 +40,7 @@ export function CurateProfessorFormPage() {
         setPhoto(p.photo)
         setUrl(p.url)
       })
-      .catch(() => setError('Failed to load professor.'))
+      .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError('Failed to load professor.') })
       .finally(() => setLoading(false))
     return () => controller.abort()
   }, [isEdit, id])

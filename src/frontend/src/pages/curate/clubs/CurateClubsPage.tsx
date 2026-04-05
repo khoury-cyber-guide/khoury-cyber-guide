@@ -21,6 +21,7 @@ export function CurateClubsPage() {
     apiClient.get('/api/clubs', { signal }).then((r) => r.data),
   )
   const [deleting, setDeleting] = useState<number | null>(null)
+  const [query, setQuery] = useState('')
 
   const handleDelete = async (id: number, name: string) => {
     if (!window.confirm(`Delete "${name}"? This cannot be undone.`)) return
@@ -50,6 +51,14 @@ export function CurateClubsPage() {
         </Link>
       </div>
 
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search clubs…"
+        className="mb-4 w-full max-w-sm rounded border border-white/15 bg-graphite px-3 py-2 text-sm text-alabaster placeholder:text-dim-grey/50 focus:border-carmine/60 focus:outline-none"
+      />
+
       {error && <p role="alert" className="mb-4 text-sm text-carmine">Failed to load clubs.</p>}
 
       {loading ? (
@@ -65,7 +74,9 @@ export function CurateClubsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {(clubs ?? []).map((club) => (
+              {(clubs ?? []).filter((c) =>
+                c.name.toLowerCase().includes(query.toLowerCase())
+              ).map((club) => (
                 <tr key={club.id} className="transition-colors hover:bg-graphite/20">
                   <td className="px-4 py-3 font-medium text-alabaster">{club.name}</td>
                   <td className="px-4 py-3 text-xs text-dim-grey">{club.tags.join(', ') || '—'}</td>

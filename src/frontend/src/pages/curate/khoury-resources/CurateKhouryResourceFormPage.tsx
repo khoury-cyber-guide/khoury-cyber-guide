@@ -44,7 +44,7 @@ export function CurateKhouryResourceFormPage() {
         setPriority(r.priority)
         setIsFeatured(r.is_featured)
       })
-      .catch(() => setError('Failed to load resource.'))
+      .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError('Failed to load resource.') })
       .finally(() => setLoading(false))
     return () => controller.abort()
   }, [isEdit, id])

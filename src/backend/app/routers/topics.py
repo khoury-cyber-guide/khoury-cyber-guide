@@ -47,6 +47,8 @@ def create_topic(
 ):
     if db.query(Topic).filter(Topic.slug == payload.slug).first():
         raise HTTPException(status_code=409, detail="Slug already exists")
+    if db.query(Topic).filter(Topic.title == payload.title).first():
+        raise HTTPException(status_code=409, detail="A topic with that title already exists")
     topic = Topic(**payload.model_dump(mode='json', exclude={"course_ids", "club_ids", "khoury_resource_ids", "professor_ids"}))
     db.add(topic)
     db.flush()

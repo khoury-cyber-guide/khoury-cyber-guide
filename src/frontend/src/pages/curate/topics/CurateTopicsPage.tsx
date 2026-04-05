@@ -20,6 +20,7 @@ export function CurateTopicsPage() {
     getTopics(signal),
   )
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [query, setQuery] = useState('')
 
   const handleDelete = async (slug: string, title: string) => {
     if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return
@@ -49,6 +50,14 @@ export function CurateTopicsPage() {
         </Link>
       </div>
 
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search topics…"
+        className="mb-4 w-full max-w-sm rounded border border-white/15 bg-graphite px-3 py-2 text-sm text-alabaster placeholder:text-dim-grey/50 focus:border-carmine/60 focus:outline-none"
+      />
+
       {error && (
         <p role="alert" className="mb-4 text-sm text-carmine">
           Failed to load topics.
@@ -70,7 +79,9 @@ export function CurateTopicsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {(topics ?? []).map((topic) => (
+              {(topics ?? []).filter((t) =>
+                `${t.title} ${t.slug}`.toLowerCase().includes(query.toLowerCase())
+              ).map((topic) => (
                 <tr key={topic.id} className="transition-colors hover:bg-graphite/20">
                   <td className="px-4 py-3 font-medium text-alabaster">{topic.title}</td>
                   <td className="px-4 py-3 text-dim-grey">{CATEGORY_LABELS[topic.category] ?? topic.category}</td>

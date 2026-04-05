@@ -296,7 +296,7 @@ class CourseUpdate(BaseModel):
     terms: list[str] | None = None
     tutoring: str | None = None
     category_tag: list[CourseCategoryTag] | None = None
-    class_type: ClassType | None = None
+    class_type: str | None = None
     avg_section_count: dict | None = None
     avg_class_size: dict | None = None
     notes: str | None = None

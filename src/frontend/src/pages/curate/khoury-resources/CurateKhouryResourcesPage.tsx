@@ -15,6 +15,7 @@ export function CurateKhouryResourcesPage() {
     getKhouryResources(signal),
   )
   const [deleting, setDeleting] = useState<number | null>(null)
+  const [query, setQuery] = useState('')
 
   const handleDelete = async (id: number, name: string) => {
     if (!window.confirm(`Delete "${name}"? This cannot be undone.`)) return
@@ -44,6 +45,14 @@ export function CurateKhouryResourcesPage() {
         </Link>
       </div>
 
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search resources…"
+        className="mb-4 w-full max-w-sm rounded border border-white/15 bg-graphite px-3 py-2 text-sm text-alabaster placeholder:text-dim-grey/50 focus:border-carmine/60 focus:outline-none"
+      />
+
       {error && <p role="alert" className="mb-4 text-sm text-carmine">Failed to load resources.</p>}
 
       {loading ? (
@@ -61,7 +70,9 @@ export function CurateKhouryResourcesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {(resources ?? []).map((r) => (
+              {(resources ?? []).filter((r) =>
+                r.name.toLowerCase().includes(query.toLowerCase())
+              ).map((r) => (
                 <tr key={r.id} className="transition-colors hover:bg-graphite/20">
                   <td className="px-4 py-3 font-medium text-alabaster">{r.name}</td>
                   <td className="px-4 py-3 text-xs text-dim-grey">

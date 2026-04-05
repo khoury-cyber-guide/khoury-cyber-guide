@@ -18,6 +18,8 @@ const CATEGORY_TAGS: CourseCategoryTag[] = [
   'CS Requirement',
   'CY Elective',
   'Support',
+  'Social Issues Requirement',
+  'Presentation Requirement',
 ]
 
 const ATTRIBUTES = [
@@ -340,7 +342,7 @@ export function CurateCourseFormPage() {
         setNotes(c.notes ?? '')
         setIsFeatured(c.is_featured ?? false)
       })
-      .catch(() => setError('Failed to load course.'))
+      .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError('Failed to load course.') })
       .finally(() => setLoading(false))
     return () => controller.abort()
   }, [isEdit, id])
@@ -363,7 +365,7 @@ export function CurateCourseFormPage() {
       tutoring,
       category_tag: categoryTags as CourseCategoryTag[],
       attributes,
-      class_type: classType || null,
+      class_type: classType || '',
       avg_section_count: {
         summer: avgSectionSummer !== '' ? Number(avgSectionSummer) : undefined,
         fall_spring: avgSectionFallSpring !== '' ? Number(avgSectionFallSpring) : undefined,

@@ -54,7 +54,10 @@ professor_courses = Table(
 #---------------------------------------------------------
 class Topic(Base):
     __tablename__ = "topics"
-    __table_args__ = (Index("ix_topics_slug", "slug", unique=True),)
+    __table_args__ = (
+        Index("ix_topics_slug", "slug", unique=True),
+        Index("ix_topics_title", "title", unique=True),
+    )
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(128), nullable=False)
@@ -80,7 +83,8 @@ class Topic(Base):
     
 class Course(Base):
     __tablename__ = "courses"
-    
+    __table_args__ = (Index("ix_courses_program_code", "course_program", "course_code", unique=True),)
+
     id = Column(Integer, primary_key=True, index=True)
     course_program = Column(String(6), nullable=False)
     course_code = Column(Integer, nullable=False)

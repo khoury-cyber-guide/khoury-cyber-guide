@@ -42,6 +42,8 @@ def create_khoury_resource(
     db: Session = Depends(get_db),
     _: AdminUser = Depends(verify_admin),
 ):
+    if db.query(KhouryResource).filter(KhouryResource.name == payload.name).first():
+        raise HTTPException(status_code=409, detail="A resource with that name already exists")
     resource = KhouryResource(**payload.model_dump())
     db.add(resource)
     db.commit()

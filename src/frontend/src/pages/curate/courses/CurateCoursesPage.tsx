@@ -14,6 +14,7 @@ export function CurateCoursesPage() {
     getCourses(signal),
   )
   const [deleting, setDeleting] = useState<number | null>(null)
+  const [query, setQuery] = useState('')
 
   const handleDelete = async (id: number, title: string) => {
     if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return
@@ -43,6 +44,14 @@ export function CurateCoursesPage() {
         </Link>
       </div>
 
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search courses…"
+        className="mb-4 w-full max-w-sm rounded border border-white/15 bg-graphite px-3 py-2 text-sm text-alabaster placeholder:text-dim-grey/50 focus:border-carmine/60 focus:outline-none"
+      />
+
       {error && (
         <p role="alert" className="mb-4 text-sm text-carmine">Failed to load courses.</p>
       )}
@@ -61,7 +70,9 @@ export function CurateCoursesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {(courses ?? []).map((course) => (
+              {(courses ?? []).filter((c) =>
+                `${c.course_program} ${c.course_code} ${c.title}`.toLowerCase().includes(query.toLowerCase())
+              ).map((course) => (
                 <tr key={course.id} className="transition-colors hover:bg-graphite/20">
                   <td className="px-4 py-3 font-mono text-xs text-dim-grey">
                     {course.course_program} {course.course_code}

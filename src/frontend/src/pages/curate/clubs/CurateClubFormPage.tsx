@@ -92,7 +92,7 @@ export function CurateClubFormPage() {
         setTags(c.tags)
         setUrl(c.url)
       })
-      .catch(() => setError('Failed to load club.'))
+      .catch((err) => { if (err?.code !== 'ERR_CANCELED') setError('Failed to load club.') })
       .finally(() => setLoading(false))
     return () => controller.abort()
   }, [isEdit, id])
