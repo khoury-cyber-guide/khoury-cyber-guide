@@ -6,7 +6,7 @@ const NAV_ITEMS = [
   { label: 'Topics', to: '/curate/topics' },
   { label: 'Courses', to: '/curate/courses' },
   { label: 'Professors', to: '/curate/professors' },
-  { label: 'Clubs', to: '/curate/clubs' },
+  { label: 'Clubs', to: '/curate/clubs', disabled: true },
   { label: 'Khoury Resources', to: '/curate/khoury-resources' },
 ]
 
@@ -39,21 +39,31 @@ export function AdminLayout() {
           <span className="text-xs font-bold tracking-widest text-carmine">CURATE</span>
         </div>
         <nav className="flex flex-1 flex-col gap-0.5 px-2 py-3">
-          {NAV_ITEMS.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                `rounded px-3 py-2 text-sm transition-colors ${
-                  isActive
-                    ? 'bg-carmine/15 font-semibold text-carmine'
-                    : 'text-dim-grey hover:bg-graphite hover:text-alabaster'
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
+          {NAV_ITEMS.map((item) =>
+            item.disabled ? (
+              <span
+                key={item.to}
+                title="Add clubs as Khoury Resources. A dedicated Clubs page may be added in the future."
+                className="cursor-not-allowed rounded px-3 py-2 text-sm text-dim-grey/40"
+              >
+                {item.label}
+              </span>
+            ) : (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2 text-sm transition-colors ${
+                    isActive
+                      ? 'bg-carmine/15 font-semibold text-carmine'
+                      : 'text-dim-grey hover:bg-graphite hover:text-alabaster'
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            )
+          )}
         </nav>
         <div className="border-t border-white/10 px-4 py-4">
           <p className="mb-2 truncate text-xs text-dim-grey">{user?.name}</p>

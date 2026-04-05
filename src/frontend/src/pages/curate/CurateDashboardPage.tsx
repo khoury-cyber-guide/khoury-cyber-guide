@@ -19,8 +19,9 @@ const SECTIONS = [
   },
   {
     label: 'Clubs',
-    description: 'Manage student club listings and topic associations.',
+    description: 'Add clubs as Khoury Resources (Clubs & On-Campus Events). A dedicated Clubs page may be added in the future.',
     to: '/curate/clubs',
+    disabled: true,
   },
   {
     label: 'Khoury Resources',
@@ -40,16 +41,26 @@ export function CurateDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {SECTIONS.map((s) => (
-          <Link
-            key={s.to}
-            to={s.to}
-            className="flex flex-col gap-1 rounded-lg border border-white/10 bg-graphite/30 p-5 transition-colors hover:border-carmine/40 hover:bg-graphite/50"
-          >
-            <span className="font-semibold text-alabaster">{s.label}</span>
-            <span className="text-sm text-dim-grey">{s.description}</span>
-          </Link>
-        ))}
+        {SECTIONS.map((s) =>
+          s.disabled ? (
+            <div
+              key={s.to}
+              className="flex flex-col gap-1 rounded-lg border border-white/5 bg-graphite/10 p-5 opacity-50"
+            >
+              <span className="font-semibold text-dim-grey">{s.label}</span>
+              <span className="text-sm text-dim-grey">{s.description}</span>
+            </div>
+          ) : (
+            <Link
+              key={s.to}
+              to={s.to}
+              className="flex flex-col gap-1 rounded-lg border border-white/10 bg-graphite/30 p-5 transition-colors hover:border-carmine/40 hover:bg-graphite/50"
+            >
+              <span className="font-semibold text-alabaster">{s.label}</span>
+              <span className="text-sm text-dim-grey">{s.description}</span>
+            </Link>
+          )
+        )}
       </div>
     </div>
   )

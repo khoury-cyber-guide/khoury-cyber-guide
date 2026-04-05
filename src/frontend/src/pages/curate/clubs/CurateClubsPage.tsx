@@ -43,12 +43,18 @@ export function CurateClubsPage() {
           <h1 className="text-2xl font-bold text-alabaster">Clubs</h1>
           <p className="mt-0.5 text-sm text-dim-grey">{clubs?.length ?? 0} total</p>
         </div>
-        <Link
-          to="/curate/clubs/new"
-          className="rounded bg-carmine px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-        >
-          + New Club
-        </Link>
+        <div className="group relative">
+          <button
+            type="button"
+            disabled
+            className="cursor-not-allowed rounded bg-graphite px-4 py-2 text-sm font-semibold text-dim-grey opacity-50"
+          >
+            + New Club
+          </button>
+          <div className="pointer-events-none absolute right-0 top-full z-10 mt-2 w-64 rounded-md border border-white/10 bg-graphite p-3 text-xs leading-relaxed text-dim-grey opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+            Add clubs as Khoury Resources (Clubs &amp; On-Campus Events category). A dedicated Clubs page may be added in the future.
+          </div>
+        </div>
       </div>
 
       <input
