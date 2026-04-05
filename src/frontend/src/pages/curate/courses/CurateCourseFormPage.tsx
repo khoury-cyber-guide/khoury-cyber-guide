@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useAdminAuth } from '@/hooks/useAdminAuth'
 import { getCourseById } from '@/api/courses'
-import { adminCreateCourse, adminUpdateCourse } from '@/api/admin'
+import { adminCreateCourse, adminUpdateCourse, adminCreateProfessor } from '@/api/admin'
 import apiClient from '@/api/client'
 import type { CourseCategoryTag } from '@/types/course'
 
@@ -78,6 +78,7 @@ function SearchableCheckList<T extends { id: number }>({
   onChange,
   renderItem,
   filterItem,
+  onQuickAdd,
 }: {
   label: string
   items: T[]
@@ -85,6 +86,7 @@ function SearchableCheckList<T extends { id: number }>({
   onChange: (ids: number[]) => void
   renderItem: (item: T) => string
   filterItem: (item: T, query: string) => boolean
+  onQuickAdd?: () => void
 }) {
   const [query, setQuery] = useState('')
   const filtered = items.filter((c) => filterItem(c, query))
@@ -93,7 +95,14 @@ function SearchableCheckList<T extends { id: number }>({
 
   return (
     <div className="flex flex-col gap-2">
-      <span className={labelCls}>{label}</span>
+      <div className="flex items-center justify-between">
+        <span className={labelCls}>{label}</span>
+        {onQuickAdd && (
+          <button type="button" onClick={onQuickAdd} className="text-xs text-carmine hover:underline">
+            + New
+          </button>
+        )}
+      </div>
       <input
         type="text"
         value={query}
@@ -132,6 +141,129 @@ function SearchableCheckList<T extends { id: number }>({
   )
 }
 
+const quickInputCls = 'w-full rounded border border-white/15 bg-graphite px-3 py-2 text-sm text-alabaster placeholder:text-dim-grey/50 focus:border-carmine/60 focus:outline-none'
+
+function QuickAddCourseModal({
+  token,
+  onCreated,
+  onClose,
+}: {
+  token: string
+  onCreated: (course: CourseSummary) => void
+  onClose: () => void
+}) {
+  const [program, setProgram] = useState('CY')
+  const [code, setCode] = useState('')
+  const [title, setTitle] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [err, setErr] = useState('')
+
+  const submit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setSaving(true)
+    setErr('')
+    try {
+      const res = await adminCreateCourse(token, {
+        course_program: program as never,
+        course_code: Number(code),
+        title,
+      })
+      onCreated(res.data)
+    } catch {
+      setErr('Failed to create course.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} aria-hidden="true" />
+      <div className="relative w-full max-w-sm rounded-lg border border-white/10 bg-background p-5 shadow-xl">
+        <button type="button" onClick={onClose} className="absolute right-4 top-4 text-dim-grey hover:text-alabaster">✕</button>
+        <h3 className="mb-4 font-bold text-alabaster">Quick-add Course</h3>
+        <form onSubmit={submit} className="flex flex-col gap-3">
+          <div className="grid grid-cols-3 gap-2">
+            <select value={program} onChange={(e) => setProgram(e.target.value)} className={quickInputCls}>
+              {PROGRAMS.map((p) => <option key={p} value={p}>{p}</option>)}
+            </select>
+            <input
+              className={`col-span-2 ${quickInputCls}`}
+              type="number" min={0} max={9999}
+              placeholder="Code" value={code}
+              onChange={(e) => setCode(e.target.value)} required
+            />
+          </div>
+          <input
+            className={quickInputCls}
+            type="text" placeholder="Title"
+            value={title} onChange={(e) => setTitle(e.target.value)} required
+          />
+          {err && <p className="text-xs text-carmine">{err}</p>}
+          <button type="submit" disabled={saving} className="rounded bg-carmine px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50">
+            {saving ? 'Saving…' : 'Create & select'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+function QuickAddProfessorModal({
+  token,
+  onCreated,
+  onClose,
+}: {
+  token: string
+  onCreated: (professor: ProfessorSummary) => void
+  onClose: () => void
+}) {
+  const [fullName, setFullName] = useState('')
+  const [areaOfFocus, setAreaOfFocus] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [err, setErr] = useState('')
+
+  const submit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setSaving(true)
+    setErr('')
+    try {
+      const res = await adminCreateProfessor(token, { full_name: fullName, area_of_focus: areaOfFocus })
+      onCreated(res.data)
+    } catch {
+      setErr('Failed to create professor.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} aria-hidden="true" />
+      <div className="relative w-full max-w-sm rounded-lg border border-white/10 bg-background p-5 shadow-xl">
+        <button type="button" onClick={onClose} className="absolute right-4 top-4 text-dim-grey hover:text-alabaster">✕</button>
+        <h3 className="mb-4 font-bold text-alabaster">Quick-add Professor</h3>
+        <form onSubmit={submit} className="flex flex-col gap-3">
+          <input
+            className={quickInputCls}
+            type="text" placeholder="Full name"
+            value={fullName} onChange={(e) => setFullName(e.target.value)} required
+          />
+          <input
+            className={quickInputCls}
+            type="text" placeholder="Area of focus (optional)"
+            value={areaOfFocus} onChange={(e) => setAreaOfFocus(e.target.value)}
+          />
+          {err && <p className="text-xs text-carmine">{err}</p>}
+          <button type="submit" disabled={saving} className="rounded bg-carmine px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50">
+            {saving ? 'Saving…' : 'Create & select'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 export function CurateCourseFormPage() {
   const { id } = useParams<{ id?: string }>()
   const isEdit = !!id
@@ -163,6 +295,8 @@ export function CurateCourseFormPage() {
   const [isFeatured, setIsFeatured] = useState(false)
   const [availableCourses, setAvailableCourses] = useState<CourseSummary[]>([])
   const [availableProfessors, setAvailableProfessors] = useState<ProfessorSummary[]>([])
+  const [showAddPrereq, setShowAddPrereq] = useState(false)
+  const [showAddProfessor, setShowAddProfessor] = useState(false)
 
   const [loading, setLoading] = useState(isEdit)
   const [submitting, setSubmitting] = useState(false)
@@ -422,6 +556,7 @@ export function CurateCourseFormPage() {
             onChange={setPrereqIds}
             renderItem={(c) => `${c.course_program} ${c.course_code} — ${c.title}`}
             filterItem={(c, q) => `${c.course_program} ${c.course_code} ${c.title}`.toLowerCase().includes(q.toLowerCase())}
+            onQuickAdd={() => setShowAddPrereq(true)}
           />
         </div>
 
@@ -435,6 +570,7 @@ export function CurateCourseFormPage() {
             onChange={setProfessorIds}
             renderItem={(p) => p.full_name}
             filterItem={(p, q) => p.full_name.toLowerCase().includes(q.toLowerCase())}
+            onQuickAdd={() => setShowAddProfessor(true)}
           />
         </div>
 
@@ -511,6 +647,30 @@ export function CurateCourseFormPage() {
           </button>
         </div>
       </form>
+
+      {showAddPrereq && token && (
+        <QuickAddCourseModal
+          token={token}
+          onCreated={(course) => {
+            setAvailableCourses((prev) => [...prev, course])
+            setPrereqIds((prev) => [...prev, course.id])
+            setShowAddPrereq(false)
+          }}
+          onClose={() => setShowAddPrereq(false)}
+        />
+      )}
+
+      {showAddProfessor && token && (
+        <QuickAddProfessorModal
+          token={token}
+          onCreated={(professor) => {
+            setAvailableProfessors((prev) => [...prev, professor])
+            setProfessorIds((prev) => [...prev, professor.id])
+            setShowAddProfessor(false)
+          }}
+          onClose={() => setShowAddProfessor(false)}
+        />
+      )}
     </div>
   )
 }

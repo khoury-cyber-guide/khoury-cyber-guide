@@ -3,11 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useAdminAuth } from '@/hooks/useAdminAuth'
 import { getTopicBySlug } from '@/api/topics'
-import { adminCreateTopic, adminUpdateTopic } from '@/api/admin'
+import { adminCreateTopic, adminUpdateTopic, adminCreateCourse, adminCreateKhouryResource } from '@/api/admin'
 import { KVPairInput } from '@/components/shared/KVPairInput'
 import { ToolItemInput, type ToolEntry } from '@/components/shared/ToolItemInput'
 import apiClient from '@/api/client'
 import type { TopicCategory } from '@/types/topic'
+
+const PROGRAMS = ['CY', 'CS', 'DS', 'EECE', 'MATH', 'ENGW', 'COMM', 'CRIM', 'LPSC', 'POLS', 'THTR']
+
 
 type ResourceEntry = { name: string; url: string; description: string }
 interface CourseSummary { id: number; course_program: string; course_code: number; title: string }
@@ -57,12 +60,14 @@ function SearchableCheckList<T extends { id: number }>({
   selected,
   onChange,
   renderLabel,
+  onQuickAdd,
 }: {
   label: string
   items: T[]
   selected: number[]
   onChange: (ids: number[]) => void
   renderLabel: (item: T) => string
+  onQuickAdd?: () => void
 }) {
   const [query, setQuery] = useState('')
   const filtered = items.filter((item) =>
@@ -73,7 +78,18 @@ function SearchableCheckList<T extends { id: number }>({
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs font-semibold text-dim-grey">{label}</span>
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-semibold text-dim-grey">{label}</span>
+        {onQuickAdd && (
+          <button
+            type="button"
+            onClick={onQuickAdd}
+            className="text-xs text-carmine hover:underline"
+          >
+            + New
+          </button>
+        )}
+      </div>
       <input
         type="text"
         value={query}
@@ -112,6 +128,139 @@ function SearchableCheckList<T extends { id: number }>({
   )
 }
 
+function QuickAddCourseModal({
+  token,
+  onCreated,
+  onClose,
+}: {
+  token: string
+  onCreated: (course: CourseSummary) => void
+  onClose: () => void
+}) {
+  const inputCls2 = 'w-full rounded border border-white/15 bg-graphite px-3 py-2 text-sm text-alabaster placeholder:text-dim-grey/50 focus:border-carmine/60 focus:outline-none'
+  const [program, setProgram] = useState('CY')
+  const [code, setCode] = useState('')
+  const [title, setTitle] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [err, setErr] = useState('')
+
+  const submit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setSaving(true)
+    setErr('')
+    try {
+      const res = await adminCreateCourse(token, {
+        course_program: program as never,
+        course_code: Number(code),
+        title,
+      })
+      onCreated(res.data)
+    } catch {
+      setErr('Failed to create course.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} aria-hidden="true" />
+      <div className="relative w-full max-w-sm rounded-lg border border-white/10 bg-background p-5 shadow-xl">
+        <button type="button" onClick={onClose} className="absolute right-4 top-4 text-dim-grey hover:text-alabaster">✕</button>
+        <h3 className="mb-4 font-bold text-alabaster">Quick-add Course</h3>
+        <form onSubmit={submit} className="flex flex-col gap-3">
+          <div className="grid grid-cols-3 gap-2">
+            <select value={program} onChange={(e) => setProgram(e.target.value)} className={inputCls2}>
+              {PROGRAMS.map((p) => <option key={p} value={p}>{p}</option>)}
+            </select>
+            <input
+              className={`col-span-2 ${inputCls2}`}
+              type="number" min={0} max={9999}
+              placeholder="Code" value={code}
+              onChange={(e) => setCode(e.target.value)} required
+            />
+          </div>
+          <input
+            className={inputCls2}
+            type="text" placeholder="Title"
+            value={title} onChange={(e) => setTitle(e.target.value)} required
+          />
+          {err && <p className="text-xs text-carmine">{err}</p>}
+          <button
+            type="submit" disabled={saving}
+            className="rounded bg-carmine px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+          >
+            {saving ? 'Saving…' : 'Create & select'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+function QuickAddClubModal({
+  token,
+  onCreated,
+  onClose,
+}: {
+  token: string
+  onCreated: (resource: { id: number; name: string }) => void
+  onClose: () => void
+}) {
+  const inputCls2 = 'w-full rounded border border-white/15 bg-graphite px-3 py-2 text-sm text-alabaster placeholder:text-dim-grey/50 focus:border-carmine/60 focus:outline-none'
+  const [name, setName] = useState('')
+  const [url, setUrl] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [err, setErr] = useState('')
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    setErr('')
+    try {
+      const res = await adminCreateKhouryResource(token, {
+        name,
+        url,
+        category: 'clubs_on_campus_events',
+      })
+      onCreated(res.data)
+    } catch {
+      setErr('Failed to create club.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} aria-hidden="true" />
+      <div className="relative w-full max-w-sm rounded-lg border border-white/10 bg-background p-5 shadow-xl">
+        <button type="button" onClick={onClose} className="absolute right-4 top-4 text-dim-grey hover:text-alabaster">✕</button>
+        <h3 className="mb-4 font-bold text-alabaster">Quick-add Club</h3>
+        <form onSubmit={submit} className="flex flex-col gap-3">
+          <input
+            className={inputCls2}
+            type="text" placeholder="Club name"
+            value={name} onChange={(e) => setName(e.target.value)} required
+          />
+          <input
+            className={inputCls2}
+            type="url" placeholder="URL"
+            value={url} onChange={(e) => setUrl(e.target.value)}
+          />
+          {err && <p className="text-xs text-carmine">{err}</p>}
+          <button
+            type="submit" disabled={saving}
+            className="rounded bg-carmine px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+          >
+            {saving ? 'Saving…' : 'Create & select'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 const inputCls =
   'w-full rounded border border-white/15 bg-graphite px-3 py-2.5 text-sm text-alabaster placeholder:text-dim-grey/50 focus:border-carmine/60 focus:outline-none'
 
@@ -136,6 +285,8 @@ export function CurateTopicFormPage() {
   const [khouryResourceIds, setKhouryResourceIds] = useState<number[]>([])
   const [availableCourses, setAvailableCourses] = useState<CourseSummary[]>([])
   const [availableKhouryResources, setAvailableKhouryResources] = useState<{ id: number; name: string }[]>([])
+  const [showAddCourse, setShowAddCourse] = useState(false)
+  const [showAddClub, setShowAddClub] = useState(false)
 
   const [certifications, setCertifications] = useState<ResourceEntry[]>([])
   const [learningTools, setLearningTools] = useState<ResourceEntry[]>([])
@@ -382,6 +533,7 @@ export function CurateTopicFormPage() {
             selected={courseIds}
             onChange={setCourseIds}
             renderLabel={(c) => `${c.course_program} ${c.course_code} — ${c.title}`}
+            onQuickAdd={() => setShowAddCourse(true)}
           />
 
           <SearchableCheckList
@@ -390,6 +542,7 @@ export function CurateTopicFormPage() {
             selected={khouryResourceIds}
             onChange={setKhouryResourceIds}
             renderLabel={(r) => r.name}
+            onQuickAdd={() => setShowAddClub(true)}
           />
         </div>
 
@@ -434,6 +587,30 @@ export function CurateTopicFormPage() {
           </button>
         </div>
       </form>
+
+      {showAddCourse && token && (
+        <QuickAddCourseModal
+          token={token}
+          onCreated={(course) => {
+            setAvailableCourses((prev) => [...prev, course])
+            setCourseIds((prev) => [...prev, course.id])
+            setShowAddCourse(false)
+          }}
+          onClose={() => setShowAddCourse(false)}
+        />
+      )}
+
+      {showAddClub && token && (
+        <QuickAddClubModal
+          token={token}
+          onCreated={(resource) => {
+            setAvailableKhouryResources((prev) => [...prev, resource])
+            setKhouryResourceIds((prev) => [...prev, resource.id])
+            setShowAddClub(false)
+          }}
+          onClose={() => setShowAddClub(false)}
+        />
+      )}
     </div>
   )
 }
