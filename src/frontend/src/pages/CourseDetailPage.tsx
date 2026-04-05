@@ -80,9 +80,20 @@ export function CourseDetailPage() {
             <h2 id="desc-heading" className="mb-3 text-xs font-semibold uppercase tracking-widest text-dim-grey">
               Course Description
             </h2>
-            <p className="text-sm leading-relaxed text-alabaster">
-              {course.extended_description || course.description || 'No description available.'}
-            </p>
+            {course.description && (
+              <p className="text-sm leading-relaxed text-dim-grey">{course.description}</p>
+            )}
+            {course.extended_description && (
+              <div className={course.description ? 'mt-6' : ''}>
+                <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-dim-grey">
+                  Expanded Description
+                </h3>
+                <p className="text-sm leading-relaxed text-alabaster">{course.extended_description}</p>
+              </div>
+            )}
+            {!course.description && !course.extended_description && (
+              <p className="text-sm leading-relaxed text-alabaster">No description available.</p>
+            )}
           </section>
 
           <Separator className="bg-white/10" />
