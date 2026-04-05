@@ -20,6 +20,8 @@ const COURSES_LINKS = [
   { label: 'CY Requirements', to: '/courses/group/CY Requirement' },
   { label: 'CY Electives', to: '/courses/group/CY Elective' },
   { label: 'Supporting Courses', to: '/courses/group/Support' },
+  { label: 'Social Issues Requirements', to: '/courses/group/Social Issues Requirement' },
+  { label: 'Presentation Requirements', to: '/courses/group/Presentation Requirement' },
 ]
 
 const KHOURY_LINKS = [
