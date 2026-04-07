@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from enum import StrEnum
 
-from pydantic import BaseModel, HttpUrl, field_validator
+from pydantic import BaseModel, field_validator
 
 _SLUG_RE = re.compile(r"^[a-z0-9-]{1,128}$")
 
@@ -88,13 +88,13 @@ class Tags(StrEnum):
 #---------------------------------------------------------
 class ResourceItem(BaseModel):
     name: str
-    url: HttpUrl
+    url: str
     description: str = ""
 
 class ToolItem(BaseModel):
     name: str
-    download_url: HttpUrl | None = None
-    support_url: HttpUrl | None = None
+    download_url: str | None = None
+    support_url: str | None = None
     description: str = ""
 
 class OffCampus(BaseModel):
