@@ -393,19 +393,19 @@ export function TopicDetailPage() {
                 <div className="flex flex-col gap-4">
                   <GridBox
                     title="Certifications"
-                    items={topic.off_campus.certifications}
+                    items={topic.off_campus.certifications ?? []}
                     renderItem={renderResourceItem}
                     emptyMessage="—"
                   />
                   <GridBox
                     title="Online Learning Tools"
-                    items={topic.off_campus.learning_tools}
+                    items={topic.off_campus.learning_tools ?? []}
                     renderItem={renderResourceItem}
                     emptyMessage="—"
                   />
                   <GridBox
                     title="Blogs / Newsletters / Discords"
-                    items={topic.off_campus.blogs_newsletters}
+                    items={topic.off_campus.blogs_newsletters ?? []}
                     renderItem={renderResourceItem}
                     emptyMessage="—"
                   />
@@ -414,7 +414,7 @@ export function TopicDetailPage() {
             </AccordionItem>
           </Accordion>
 
-          {topic.off_campus.tools.length > 0 && (
+          {(topic.off_campus.tools?.length ?? 0) > 0 && (
             <Accordion multiple defaultValue={['tools']}>
               <AccordionItem value="tools" className="rounded-md border border-white/10 px-5">
                 <AccordionTrigger className="text-base font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
@@ -422,7 +422,7 @@ export function TopicDetailPage() {
                 </AccordionTrigger>
                 <AccordionContent className="pb-6 pt-2">
                   <div className="flex flex-col gap-3">
-                    {topic.off_campus.tools.map((tool, i) => (
+                    {(topic.off_campus.tools ?? []).map((tool, i) => (
                       <ToolItemRow key={i} item={tool} />
                     ))}
                   </div>
@@ -431,7 +431,7 @@ export function TopicDetailPage() {
             </Accordion>
           )}
 
-          {topic.off_campus.other_resources?.length > 0 && (
+          {(topic.off_campus.other_resources?.length ?? 0) > 0 && (
             <Accordion multiple defaultValue={['off-campus-other']}>
               <AccordionItem value="off-campus-other" className="rounded-md border border-white/10 px-5">
                 <AccordionTrigger className="text-base font-bold uppercase tracking-widest text-dim-grey hover:text-alabaster hover:no-underline">
