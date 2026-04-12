@@ -3,8 +3,10 @@ import { useApi } from '@/hooks/useApi'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { PageWrapper } from '@/components/layout/PageWrapper'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Separator } from '@/components/ui/separator'
 import { getKhouryResources } from '@/api/khouryResources'
 import { KHOURY_RESOURCE_CATEGORY_MAP } from '@/data/khouryResources'
+import { DEGREE_PLANS, DEGREE_PLAN_TAG_STYLE } from '@/data/degreePlans'
 import { NotFoundPage } from './NotFoundPage'
 import type { KhouryResourceCategory, KhouryResourceSummary } from '@/types/khouryResource'
 
@@ -99,6 +101,51 @@ export function KhouryResourcesCategoryPage() {
             <p className="text-sm text-dim-grey">No resources yet.</p>
           )}
         </div>
+      )}
+
+      {category === 'advising_degree_planning' && (
+        <>
+          <Separator className="my-10 bg-white/10" />
+          <section>
+            <div className="mb-5 border-l-4 border-carmine pl-4">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-alabaster">
+                Sample Degree Plans
+              </h2>
+              <p className="mt-1 text-sm text-dim-grey">
+                Example semester-by-semester plans showing how students have structured their degree.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {DEGREE_PLANS.map((plan) => (
+                <Link
+                  key={plan.slug}
+                  to={`/resources/advising_degree_planning/degree-plans/${plan.slug}`}
+                  className="group flex flex-col gap-3 rounded-md border border-white/10 bg-graphite p-5 transition-colors hover:border-carmine/40"
+                >
+                  <div className="flex flex-wrap gap-1.5">
+                    {plan.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`rounded border px-2 py-0.5 text-xs font-semibold ${DEGREE_PLAN_TAG_STYLE[tag]}`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-alabaster transition-colors group-hover:text-carmine">
+                      {plan.title}
+                    </p>
+                    <p className="mt-0.5 text-sm text-dim-grey">{plan.degreeType}</p>
+                  </div>
+                  <p className="mt-auto text-xs text-dim-grey">
+                    Graduating: {plan.graduationTerm} · {plan.years.length} years
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        </>
       )}
     </PageWrapper>
   )

@@ -24,6 +24,7 @@ import { CurateClubsPage } from '@/pages/curate/clubs/CurateClubsPage'
 import { CurateClubFormPage } from '@/pages/curate/clubs/CurateClubFormPage'
 import { KhouryResourcesHubPage } from '@/pages/KhouryResourcesHubPage'
 import { KhouryResourcesCategoryPage } from '@/pages/KhouryResourcesCategoryPage'
+import { DegreePlanPage } from '@/pages/DegreePlanPage'
 import { CurateKhouryResourcesPage } from '@/pages/curate/khoury-resources/CurateKhouryResourcesPage'
 import { CurateKhouryResourceFormPage } from '@/pages/curate/khoury-resources/CurateKhouryResourceFormPage'
 
@@ -49,6 +50,7 @@ export default function App() {
                     <Route path="/courses/group/:tag" element={<CourseGroupPage />} />
                     <Route path="/courses/:id" element={<CourseDetailPage />} />
                     <Route path="/resources" element={<KhouryResourcesHubPage />} />
+                    <Route path="/resources/advising_degree_planning/degree-plans/:slug" element={<DegreePlanPage />} />
                     <Route path="/resources/:category" element={<KhouryResourcesCategoryPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                   </Routes>
