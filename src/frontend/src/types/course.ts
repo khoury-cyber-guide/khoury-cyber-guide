@@ -5,6 +5,7 @@ export type CourseCategoryTag =
   | 'CY Requirement'
   | 'Social Issues Requirement'
   | 'Presentation Requirement'
+  | 'Misc. Elective'
 
 export interface CourseSummary {
   id: number
@@ -81,10 +82,14 @@ export const COURSE_CATEGORY_META: Record<CourseCategoryTag, { label: string; de
   },
   'Social Issues Requirement': {
     label: 'Social Issues Requirement',
-    description: 'Courses fulfilling the social issues and ethics requirement.',
+    description: 'Students must complete one of the following (the rest may be used as Cyber Electives):',
   },
   'Presentation Requirement': {
     label: 'Presentation Requirement',
-    description: 'Courses fulfilling the oral presentation requirement.',
+    description: 'Students must complete one of the following:',
+  },
+  'Misc. Elective': {
+    label: 'Miscellaneous Electives',
+    description: 'Students must complete four of the following:',
   },
 }

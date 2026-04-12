@@ -45,6 +45,7 @@ class CourseCategoryTag(StrEnum):
     CY_REQ = "CY Requirement"
     SOCIAL_ISSUES = "Social Issues Requirement"
     PRESENTATION = "Presentation Requirement"
+    MISC_ELECT = "Misc. Elective"
 
 class ClassType(StrEnum):
     ONLINE = "ONLINE"
