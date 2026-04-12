@@ -192,7 +192,7 @@ export function CourseDetailPage() {
           {course.past_professors.length > 0 && (
             <div className="rounded-md border border-white/10 bg-graphite p-5">
               <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-dim-grey">
-                Past Instructors
+                Most Recent Instructors
               </h2>
               <div className="flex flex-col gap-2">
                 {course.past_professors.map((prof) => (
