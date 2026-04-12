@@ -66,15 +66,15 @@ export type CourseUpdate = Partial<CourseCreate>
 export const COURSE_CATEGORY_META: Record<CourseCategoryTag, { label: string; description: string }> = {
   'CY Requirement': {
     label: 'Required Cybersecurity Courses',
-    description: 'Core cybersecurity courses required for the CY degree.',
+    description: 'Students must complete all of the following:',
   },
   'CS Requirement': {
     label: 'Required Computer Science Courses',
-    description: 'Computer science foundations required for the CY degree.',
+    description: 'Students must complete all of the following:\n\nChoose either CS4700 or CS4730. The other may count as a Cyber Elective.',
   },
   Support: {
     label: 'Required Supporting Courses',
-    description: 'Mathematics, science, and other supporting requirements.',
+    description: 'Students must complete all of the following:',
   },
   'CY Elective': {
     label: 'Cybersecurity Elective Courses',

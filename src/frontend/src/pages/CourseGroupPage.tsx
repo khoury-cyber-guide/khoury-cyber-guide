@@ -42,7 +42,7 @@ export function CourseGroupPage() {
         <h1 className="text-3xl font-bold tracking-tight text-alabaster sm:text-4xl">
           {meta.label}
         </h1>
-        <p className="mt-4 max-w-3xl text-base leading-relaxed text-dim-grey">
+        <p className="mt-4 max-w-3xl whitespace-pre-line text-base leading-relaxed text-dim-grey">
           {meta.description}
         </p>
       </div>

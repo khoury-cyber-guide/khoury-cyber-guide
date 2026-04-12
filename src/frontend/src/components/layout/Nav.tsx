@@ -22,6 +22,7 @@ const COURSES_LINKS = [
   { label: 'Supporting Courses', to: '/courses/group/Support' },
   { label: 'Social Issues Requirements', to: '/courses/group/Social Issues Requirement' },
   { label: 'Presentation Requirements', to: '/courses/group/Presentation Requirement' },
+  { label: 'Miscellaneous Electives', to: '/courses/group/Misc. Elective' },
 ]
 
 const KHOURY_LINKS = [

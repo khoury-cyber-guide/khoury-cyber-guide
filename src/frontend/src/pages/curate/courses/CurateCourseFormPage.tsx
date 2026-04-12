@@ -564,7 +564,7 @@ export function CurateCourseFormPage() {
 
         {/* Past Professors */}
         <div className="flex flex-col gap-4 rounded-lg border border-white/10 p-5">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-dim-grey">Past Professors</h2>
+          <h2 className="text-xs font-bold uppercase tracking-widest text-dim-grey">Most Recent Professors</h2>
           <SearchableCheckList
             label="Select professors"
             items={availableProfessors}
