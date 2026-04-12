@@ -239,7 +239,7 @@ function renderKhouryResource(resource: KhouryResourceInTopic) {
       href={resource.url || undefined}
       target={resource.url ? '_blank' : undefined}
       rel="noopener noreferrer"
-      className="group flex items-start gap-3 rounded px-2 py-1.5 transition-colors hover:bg-black/10"
+      className="group flex items-start gap-3 rounded px-2 py-1.5 no-underline transition-colors hover:bg-black/10"
     >
       <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-carmine" aria-hidden="true" />
       <div className="min-w-0">
