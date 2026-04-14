@@ -24,7 +24,7 @@ export function TopicCategoryPage() {
   useDocumentTitle(isValid ? meta.label : undefined)
 
   const { data: topics, loading, error } = useApi<TopicSummary[]>(
-    (signal) => isValid ? getTopics(signal, cat) : Promise.resolve([]),
+    (signal) => isValid ? getTopics(signal, { category: cat }) : Promise.resolve([]),
     [cat],
   )
 
