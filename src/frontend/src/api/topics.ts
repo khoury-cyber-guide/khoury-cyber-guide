@@ -3,10 +3,9 @@ import apiClient from './client'
 
 export async function getTopics(
   signal: AbortSignal,
-  category?: TopicCategory,
+  options?: { category?: TopicCategory; is_featured?: boolean },
 ): Promise<TopicSummary[]> {
-  const params = category ? { category } : {}
-  const { data } = await apiClient.get<TopicSummary[]>('/api/topics', { params, signal })
+  const { data } = await apiClient.get<TopicSummary[]>('/api/topics', { params: options ?? {}, signal })
   return data
 }
 

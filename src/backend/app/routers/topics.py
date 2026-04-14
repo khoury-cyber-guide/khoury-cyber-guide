@@ -23,11 +23,14 @@ def _apply_relationships(topic: Topic, payload, db: Session) -> None:
 @router.get("", response_model=list[TopicSummary])
 def list_topics(
     category: TopicCategory | None = Query(default=None),
+    is_featured: bool | None = Query(default=None),
     db: Session = Depends(get_db),
 ):
     q = db.query(Topic)
     if category is not None:
         q = q.filter(Topic.category == category)
+    if is_featured is not None:
+        q = q.filter(Topic.is_featured == is_featured)
     return q.order_by(Topic.category, Topic.order).all()
 
 

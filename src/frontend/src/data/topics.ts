@@ -42,7 +42,7 @@ export interface TopicEntry {
   category: TopicCategory
   order: number
   description: string
-  is_featured?: boolean
+
 }
 
 export const TOPICS: TopicEntry[] = [
@@ -52,7 +52,7 @@ export const TOPICS: TopicEntry[] = [
     slug: 'network-security',
     category: 'build_and_secure',
     order: 1,
-    is_featured: true,
+
     description:
       'Protecting computer networks and the data that travels across them. Firewalls, encryption, segmentation, and traffic monitoring help prevent unauthorized access and detect malicious activity.',
   },
@@ -69,7 +69,7 @@ export const TOPICS: TopicEntry[] = [
     slug: 'application-security',
     category: 'build_and_secure',
     order: 3,
-    is_featured: true,
+
     description:
       'Protecting software from vulnerabilities that attackers can exploit. Includes secure coding, vulnerability testing, authentication controls, and regular updates.',
   },
@@ -120,7 +120,7 @@ export const TOPICS: TopicEntry[] = [
     slug: 'penetration-testing',
     category: 'attack_and_defend',
     order: 1,
-    is_featured: true,
+
     description:
       'Simulating real-world attacks to identify vulnerabilities before malicious actors exploit them. Uses controlled techniques to evaluate how well systems and defenses hold up.',
   },

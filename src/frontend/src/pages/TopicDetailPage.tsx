@@ -7,7 +7,7 @@ import { PageWrapper } from '@/components/layout/PageWrapper'
 import { ResourceSection } from '@/components/shared/ResourceSection'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CATEGORY_META, TOPICS } from '@/data/topics'
+import { CATEGORY_META } from '@/data/topics'
 import type { TopicDetail, ResourceItem, ToolItem, CourseSummaryInTopic, KhouryResourceInTopic } from '@/types/topic'
 import { NotFoundPage } from './NotFoundPage'
 
@@ -282,7 +282,7 @@ export function TopicDetailPage() {
 
   if (error || !topic) return <NotFoundPage />
 
-  const isFeatured = TOPICS.find((t) => t.slug === slug)?.is_featured ?? false
+  const isFeatured = topic.is_featured
   const whatIs = topic.misc.what_is
   const commonAttacks = topic.misc.common_attacks
   const whyCare = topic.misc.why_care

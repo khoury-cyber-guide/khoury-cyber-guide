@@ -5,13 +5,13 @@ import { useApi } from '@/hooks/useApi'
 import { PageWrapper } from '@/components/layout/PageWrapper'
 import { getKhouryResources } from '@/api/khouryResources'
 import apiClient from '@/api/client'
+import { getTopics } from '@/api/topics'
 import { LEARNING_PATHS, TOPICS } from '@/data/topics'
 import type { CourseSummary } from '@/types/course'
 import type { KhouryResourceSummary } from '@/types/khouryResource'
+import type { TopicSummary } from '@/types/topic'
 
 const topicBySlug = Object.fromEntries(TOPICS.map((t) => [t.slug, t]))
-
-const FEATURED_TOPICS = TOPICS.filter((t) => t.is_featured).slice(0, 3)
 
 // Tie-break order when scores are equal
 const PATH_PRIORITY = [
@@ -113,6 +113,10 @@ export function StartHerePage() {
   const q3Ref = useRef<HTMLDivElement>(null)
   const resultRef = useRef<HTMLDivElement>(null)
 
+  const { data: featuredTopics } = useApi<TopicSummary[]>((signal) =>
+    getTopics(signal, { is_featured: true }),
+  )
+
   const { data: featuredCourses } = useApi<CourseSummary[]>((signal) =>
     apiClient.get('/api/courses', { signal, params: { is_featured: true } }).then((r) => r.data),
   )
@@ -145,7 +149,7 @@ export function StartHerePage() {
   const popupPath = openPath ? LEARNING_PATHS.find((p) => p.slug === openPath) ?? null : null
 
   const hasBestOf =
-    FEATURED_TOPICS.length > 0 ||
+    (featuredTopics && featuredTopics.length > 0) ||
     (featuredCourses && featuredCourses.length > 0) ||
     (featuredResources && featuredResources.length > 0)
 
@@ -247,11 +251,11 @@ export function StartHerePage() {
           </div>
 
           <div className="flex flex-col gap-10">
-            {FEATURED_TOPICS.length > 0 && (
+            {featuredTopics && featuredTopics.length > 0 && (
               <section>
                 <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-dim-grey">Topics</p>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {FEATURED_TOPICS.map((t) => (
+                  {featuredTopics.map((t) => (
                     <Link
                       key={t.slug}
                       to={`/topics/${t.category}/${t.slug}`}
