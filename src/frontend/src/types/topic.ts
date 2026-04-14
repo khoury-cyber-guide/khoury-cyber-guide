@@ -10,6 +10,7 @@ export interface TopicSummary {
   category: TopicCategory
   order: number
   description: string
+  is_featured: boolean
 }
 
 import type { CourseCategoryTag } from '@/types/course'

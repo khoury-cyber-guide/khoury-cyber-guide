@@ -75,12 +75,14 @@ class Topic(Base):
     professors = relationship("Professor", secondary=topic_professors, back_populates="topics")
     khoury_resources = relationship("KhouryResource", secondary=topic_khoury_resources)
 
+    is_featured = Column(Boolean, nullable=False, default=False, server_default="false")
+
     # Optional rich content stored in misc:
     # misc.why_care, misc.secondary_section, misc.still_confused,
     # misc.active_research, misc.tools, misc.other_resources
     misc = Column(JSON, nullable=False, default=dict, server_default="{}")
     created_at = Column(DateTime(timezone=True), default=func.now(), server_default=func.now())
-    
+
 class Course(Base):
     __tablename__ = "courses"
     __table_args__ = (Index("ix_courses_program_code", "course_program", "course_code", unique=True),)

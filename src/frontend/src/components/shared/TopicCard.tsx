@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import { TOPICS } from '@/data/topics'
 import type { TopicSummary } from '@/types/topic'
 
 interface TopicCardProps {
@@ -7,7 +6,7 @@ interface TopicCardProps {
 }
 
 export function TopicCard({ topic }: TopicCardProps) {
-  const isFeatured = TOPICS.find((t) => t.slug === topic.slug)?.is_featured ?? false
+  const isFeatured = topic.is_featured
 
   return (
     <Link

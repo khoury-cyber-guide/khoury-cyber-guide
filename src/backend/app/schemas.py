@@ -335,6 +335,7 @@ class TopicSummary(BaseModel):
     category: str
     order: int
     description: str
+    is_featured: bool = False
 
     model_config = {"from_attributes": True}
 
@@ -394,6 +395,7 @@ class TopicCreate(BaseModel):
     slug: str
     order: int = 0
     description: str = ""
+    is_featured: bool = False
     off_campus: OffCampus = OffCampus()
     misc: dict = {}
     course_ids: list[int] = []
@@ -415,6 +417,7 @@ class TopicRead(BaseModel):
     slug: str
     order: int
     description: str
+    is_featured: bool = False
     off_campus: OffCampus
     courses: list[CourseSummary] = []
     clubs: list[ClubSummary] = []
@@ -431,6 +434,7 @@ class TopicUpdate(BaseModel):
     slug: str | None = None
     order: int | None = None
     description: str | None = None
+    is_featured: bool | None = None
     off_campus: OffCampus | None = None
     misc: dict | None = None
     course_ids: list[int] | None = None

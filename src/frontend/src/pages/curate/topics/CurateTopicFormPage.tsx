@@ -280,6 +280,7 @@ export function CurateTopicFormPage() {
   const [category, setCategory] = useState<TopicCategory>('build_and_secure')
   const [order, setOrder] = useState(0)
   const [description, setDescription] = useState('')
+  const [isFeatured, setIsFeatured] = useState(false)
 
   const [courseIds, setCourseIds] = useState<number[]>([])
   const [khouryResourceIds, setKhouryResourceIds] = useState<number[]>([])
@@ -325,6 +326,7 @@ export function CurateTopicFormPage() {
         setCategory(t.category)
         setOrder(t.order)
         setDescription(t.description)
+        setIsFeatured(t.is_featured ?? false)
 
         setCourseIds(t.courses.map((c) => c.id))
         setKhouryResourceIds(t.khoury_resources.map((r: { id: number }) => r.id))
@@ -365,6 +367,7 @@ export function CurateTopicFormPage() {
       slug: topicSlug,
       order,
       description,
+      is_featured: isFeatured,
       course_ids: courseIds,
       khoury_resource_ids: khouryResourceIds,
       off_campus: {
@@ -477,6 +480,16 @@ export function CurateTopicFormPage() {
               className={inputCls}
             />
           </div>
+
+          <label className="flex cursor-pointer items-center gap-3">
+            <input
+              type="checkbox"
+              checked={isFeatured}
+              onChange={(e) => setIsFeatured(e.target.checked)}
+              className="h-4 w-4 accent-carmine"
+            />
+            <span className="text-sm text-alabaster">★ Our Pick <span className="text-dim-grey">(shown on Start Here and topic cards)</span></span>
+          </label>
         </div>
 
         {/* Content */}
